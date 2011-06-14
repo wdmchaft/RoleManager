@@ -8,6 +8,7 @@
 
 #import "MainMenuViewController.h"
 #import "RoleViewController.h"
+#import "SetupViewController.h"
 
 
 @implementation MainMenuViewController
@@ -27,7 +28,7 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-	self.title =@"fuckya";
+	self.title =@"<good app name here>";
 }
 
 
@@ -61,7 +62,14 @@
 #pragma mark IBActions
 -(IBAction)loadScreenOne:(id)sender
 {
+    NSLog(@"Config button Pressed - start of event");
+	SetupViewController *setupViewController = [[SetupViewController alloc] initWithNibName:@"SetupViewController" bundle:nil];
+	// Pass the selected object to the new view controller.
+	setupViewController.title = @"Setup";
+	[self.navigationController pushViewController:setupViewController animated:YES];
 	
+	[setupViewController release];
+    NSLog(@"Config button Pressed - end of event");	    
 }
 
 

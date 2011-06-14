@@ -48,4 +48,24 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+#pragma mark -
+#pragma mark IBActions
+-(IBAction)loadScreenOne:(id)sender
+{
+    NSLog(@"Setup Peson button Pressed - start of event");
+//	SetupViewController *setupViewController = [[SetupViewController alloc] initWithNibName:@"SetupViewController" bundle:nil];
+//	// Pass the selected object to the new view controller.
+//	setupViewController.title = @"Setup";
+//	[self.navigationController pushViewController:setupViewController animated:YES];
+//	
+//	[setupViewController release];
+    NSLog(@"Setup Person button Pressed - end of event");	    
+}
+
+
+-(IBAction)loadScreenTwo:(id)sender
+{
+    //TODO-RL
+}
+
 @end

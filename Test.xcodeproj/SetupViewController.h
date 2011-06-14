@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SetupViewController : UIViewController
+@interface SetupViewController : UIViewController{
+    
+}
+
+-(IBAction)loadScreenOne:(id)sender;
+-(IBAction)loadScreenTwo:(id)sender;
 
 @end
