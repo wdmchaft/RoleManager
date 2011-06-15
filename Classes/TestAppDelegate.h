@@ -7,15 +7,30 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreData/CoreData.h>
 
-@interface TestAppDelegate : NSObject <UIApplicationDelegate> {
+//@class NSManagedObjectContext;
+//@class NSManagedObjectModel;
+//@class NSPersistentStoreCoordinator;
+
+@interface TestAppDelegate : NSObject <UIApplicationDelegate> 
+{
     
     UIWindow *window;
     UINavigationController *navigationController;
+    
 }
+
+- (void)saveContext;
+- (NSManagedObjectContext *)managedObjectContext;
+- (NSURL *)applicationDocumentsDirectory;
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
+@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (readonly, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
 
 @end
 

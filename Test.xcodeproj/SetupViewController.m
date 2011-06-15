@@ -7,6 +7,8 @@
 //
 
 #import "SetupViewController.h"
+#import "SetupMemberViewController.h"
+#import "SetupRoleViewController.h"
 
 @implementation SetupViewController
 
@@ -53,19 +55,26 @@
 -(IBAction)loadScreenOne:(id)sender
 {
     NSLog(@"Setup Peson button Pressed - start of event");
-//	SetupViewController *setupViewController = [[SetupViewController alloc] initWithNibName:@"SetupViewController" bundle:nil];
-//	// Pass the selected object to the new view controller.
-//	setupViewController.title = @"Setup";
-//	[self.navigationController pushViewController:setupViewController animated:YES];
-//	
-//	[setupViewController release];
+	SetupMemberViewController *setupMemberViewController = [[SetupMemberViewController alloc] initWithNibName:@"SetupMemberViewController" bundle:nil];
+	// Pass the selected object to the new view controller.
+	setupMemberViewController.title = @"Member Setup";
+	[self.navigationController pushViewController:setupMemberViewController animated:YES];
+	
+	[setupMemberViewController release];
     NSLog(@"Setup Person button Pressed - end of event");	    
 }
 
 
 -(IBAction)loadScreenTwo:(id)sender
 {
-    //TODO-RL
+    NSLog(@"Setup Role button Pressed - start of event");
+	SetupRoleViewController *setupRoleViewController = [[SetupRoleViewController alloc] initWithNibName:@"SetupRoleViewController" bundle:nil];
+	// Pass the selected object to the new view controller.
+	setupRoleViewController.title = @"Role Setup";
+	[self.navigationController pushViewController:setupRoleViewController animated:YES];
+	
+	[setupRoleViewController release];
+    NSLog(@"Setup Role button Pressed - end of event");
 }
 
 @end
