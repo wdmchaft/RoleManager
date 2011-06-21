@@ -24,6 +24,7 @@
     //self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	
 	roles = [[NSArray arrayWithObjects:@"Role A" , @"Role B", @"Role C", nil] retain];
+    //TODO-RL have this load up Roles as main title per cell, but with person for the data as the info if its set
 }
 
 /*
