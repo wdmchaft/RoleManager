@@ -54,27 +54,23 @@
 #pragma mark IBActions
 -(IBAction)loadScreenOne:(id)sender
 {
-    NSLog(@"Setup Peson button Pressed - start of event");
 	SetupMemberViewController *setupMemberViewController = [[SetupMemberViewController alloc] initWithNibName:@"SetupMemberViewController" bundle:nil];
 	// Pass the selected object to the new view controller.
 	setupMemberViewController.title = @"Member Setup";
 	[self.navigationController pushViewController:setupMemberViewController animated:YES];
 	
-	[setupMemberViewController release];
-    NSLog(@"Setup Person button Pressed - end of event");	    
+	[setupMemberViewController release];   
 }
 
 
 -(IBAction)loadScreenTwo:(id)sender
 {
-    NSLog(@"Setup Role button Pressed - start of event");
 	SetupRoleViewController *setupRoleViewController = [[SetupRoleViewController alloc] initWithNibName:@"SetupRoleViewController" bundle:nil];
 	// Pass the selected object to the new view controller.
 	setupRoleViewController.title = @"Role Setup";
 	[self.navigationController pushViewController:setupRoleViewController animated:YES];
 	
 	[setupRoleViewController release];
-    NSLog(@"Setup Role button Pressed - end of event");
 }
 
 @end

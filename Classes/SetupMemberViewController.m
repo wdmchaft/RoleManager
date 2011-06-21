@@ -13,10 +13,9 @@
 
 @implementation SetupMemberViewController
 
-@synthesize addButton;
+@synthesize button;
 @synthesize peopleArray;
 @synthesize fetchRequest;
-
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -54,15 +53,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         
         // Commit the change.
         if (![context save:&error]) {
-            // Handle the error.
+            NSLog(@"Whoops, couldn't delete: %@", [error localizedDescription]);
         }
-        
-        NSLog(@"delete event detected");
     }
 }
 
 #pragma mark - View lifecycle
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -76,19 +72,19 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:3];
     
     // create a standard "add" button
-    addButton = [[UIBarButtonItem alloc]
+    button = [[UIBarButtonItem alloc]
                            initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addEvent)];
-    addButton.style = UIBarButtonItemStyleBordered;
-    [buttons addObject:addButton];
-    [addButton release];
+    button.style = UIBarButtonItemStyleBordered;
+    [buttons addObject:button];
+    [button release];
     
     // create a spacer
-    addButton = [[UIBarButtonItem alloc]
+    button = [[UIBarButtonItem alloc]
           initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    [buttons addObject:addButton];
-    [addButton release];
+    [buttons addObject:button];
+    [button release];
     
-    // create a standard "edit" button
+    // use the available "edit" button
     self.editButtonItem.title = @"Edit";
     UIBarButtonItem *editButton = self.editButtonItem;
     [buttons addObject:editButton];
@@ -122,8 +118,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-    self.addButton = nil;
+    self.button = nil;
     self.peopleArray = nil;
+    self.fetchRequest = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -153,61 +150,52 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     return cell;
 }
 
+- (void)dealloc 
+{
+    [peopleArray release];
+    [button release];
+    [fetchRequest release];
+    [super dealloc];
+}
+
 - (void)addEvent 
+{
+    MemberAddViewController *addController = [[MemberAddViewController alloc]
+                                              initWithNibName:@"MemberAddViewController" bundle:nil];
+    // register delegate; so control can be returned after child controllers save event
+    addController.delegate = self;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addController];
+    [self presentModalViewController:navigationController animated:YES];
+    [navigationController release];
+}
+      
+#pragma mark - Data Access addPerson
+- (void)addPerson:(NSDictionary *)userInfo
 {
     TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
     
     NSManagedObjectContext *context = appDelegate.managedObjectContext;
     NSManagedObject *person = (Person *)[NSEntityDescription
-                                       insertNewObjectForEntityForName:@"Person" 
-                                       inManagedObjectContext:context];
-    NSLog(@"entering addEvent");
+                                         insertNewObjectForEntityForName:@"Person" 
+                                         inManagedObjectContext:context];
+    // set values
+    [person setValue:[userInfo valueForKey:@"firstName"] forKey:@"firstname"];
+    [person setValue:[userInfo valueForKey:@"lastName"] forKey:@"lastname"];
     
-    MemberAddViewController *addController = [[MemberAddViewController alloc]
-                                              initWithNibName:@"MemberAddViewController" bundle:nil];
+    // save data
+    if (![context save:&error]) {
+        NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+    }
     
-    addController.delegate = self;
-    
-    
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addController];
-    [self presentModalViewController:navigationController animated:YES];
-    [navigationController release];
-    
-    
-    //TODO-Rl implement capturing this data from 2 fields above, set data here? or in child view? help
-    
-    
-    
-    
-    
-//    [person setValue:@"blah name sfddsds" forKey:@"firstname"];
-//    [person setValue:@"more blah" forKey:@"lastname"];
-//    
-//
-//    NSArray *fetchedObjects = [self fetchAllPeople];
-//    
-//    // ******* start logging
-//    for (NSManagedObject *info in fetchedObjects) {
-//        NSLog(@"FirstName: %@", [info valueForKey:@"firstname"]);
-//        NSLog(@"LastName: %@", [info valueForKey:@"lastname"]);
-//    }
-//    // ******* end logging
-//    
-//    // update table view with data
-//    [peopleArray insertObject:person atIndex:0];
-//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-//    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
-//                          withRowAnimation:UITableViewRowAnimationFade];
-//    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-//    
-//    // save data
-//    if (![context save:&error]) {
-//        NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
-//    }
-//    NSLog(@"At end of addEvent");
-    
+    // update table view with data
+    [peopleArray insertObject:person atIndex:0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
+                          withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
+#pragma mark - Data Access fetchAllPeople
 - (NSMutableArray *)fetchAllPeople
 {
     TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -223,35 +211,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     return fetchedObjects;
 }
 
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
-    [super setEditing:editing animated:animated];
-    [self.tableView setEditing:editing animated:YES];
-    if (editing) {
-        addButton.enabled = NO;
-    } else {
-        addButton.enabled = YES;
-    }
-    NSLog(@"end of setEdtiing");
-}
-
-- (void)dealloc 
-{
-    [peopleArray release];
-    [addButton release];
-    [fetchRequest release];
-    [super dealloc];
-}
-
 #pragma mark - MemberAddViewControllerDelegate
 - (void)addMemberViewController:(MemberAddViewController *)controller didFinish:(NSDictionary *)userInfo
 {
-    //NSString *name = [userInfo objectForKey:@"firstName"];
-    NSLog(@"Result %@" , userInfo);
-    
-    //TODO-RL bind the variables to outlets/vars... then use them
-
+    [self addPerson:userInfo];
     [self dismissModalViewControllerAnimated:YES];
 }
-
 
 @end

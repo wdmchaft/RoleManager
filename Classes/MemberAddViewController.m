@@ -53,15 +53,12 @@
 #pragma mark IBActions
 -(IBAction)save:(id)sender
 {
-    //TODO- edit capture text fields, handle keyboard disapearing with enter key or non focus, validate something exists for fname/lname, then either persist here, or return values for parent to persist... help
-
-    NSLog(@"release the hounds");
+    //TODO-RL implement validation on firstname/lastname - not null
+    
+    // set results for parent controller to use
     NSDictionary *results = [NSDictionary dictionaryWithObjectsAndKeys:firstName.text, @"firstName",
                              lastName.text, @"lastName", nil];
-    
     [self.delegate addMemberViewController:self didFinish:results];
-    
-    //TODO- RETURN CONTROL TO PARENT VIEWCONTROLLER
 }
 
 @end
