@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "Person.h"
+#import "MemberAddViewController.h"
 
-@interface SetupMemberViewController : UITableViewController{
+@interface SetupMemberViewController : UITableViewController<MemberAddViewControllerDelegate>{
     
     NSMutableArray *peopleArray;
     UIBarButtonItem *addButton;
@@ -20,8 +21,12 @@
 - (void)addEvent;
 - (NSMutableArray *)fetchAllPeople;
 
+- (void)addMemberViewController:(MemberAddViewController *)controller didFinish:(NSDictionary *)userInfo;
+
+
 @property (nonatomic, retain) UIBarButtonItem *addButton;
 @property (nonatomic, retain) NSMutableArray *peopleArray;
 @property (nonatomic, retain) NSFetchRequest *fetchRequest;
+
 
 @end

@@ -9,12 +9,14 @@
 #import "SetupMemberViewController.h"
 #import "Person.h"
 #import "TestAppDelegate.h"
+#import "MemberAddViewController.h"
 
 @implementation SetupMemberViewController
 
 @synthesize addButton;
 @synthesize peopleArray;
 @synthesize fetchRequest;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -68,7 +70,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     
     // Set up the buttons.
     // create a toolbar to have two buttons in the right
-    UIToolbar* tools = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 94, 44.01)];
+    UIToolbar* tools = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 96, 44.01)];
     
     // create the array to hold the buttons, which then gets added to the toolbar
     NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:3];
@@ -161,36 +163,48 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                        inManagedObjectContext:context];
     NSLog(@"entering addEvent");
     
+    MemberAddViewController *addController = [[MemberAddViewController alloc]
+                                              initWithNibName:@"MemberAddViewController" bundle:nil];
+    
+    addController.delegate = self;
+    
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addController];
+    [self presentModalViewController:navigationController animated:YES];
+    [navigationController release];
+    
+    
+    //TODO-Rl implement capturing this data from 2 fields above, set data here? or in child view? help
     
     
     
     
-    //TODO-Rl implement capturing this data from 2 fields 
-    [person setValue:@"blah name sfddsds" forKey:@"firstname"];
-    [person setValue:@"more blah" forKey:@"lastname"];
     
-
-    NSArray *fetchedObjects = [self fetchAllPeople];
-    
-    // ******* start logging
-    for (NSManagedObject *info in fetchedObjects) {
-        NSLog(@"FirstName: %@", [info valueForKey:@"firstname"]);
-        NSLog(@"LastName: %@", [info valueForKey:@"lastname"]);
-    }
-    // ******* end logging
-    
-    // update table view with data
-    [peopleArray insertObject:person atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
-                          withRowAnimation:UITableViewRowAnimationFade];
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    
-    // save data
-    if (![context save:&error]) {
-        NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
-    }
-    NSLog(@"At end of addEvent");
+//    [person setValue:@"blah name sfddsds" forKey:@"firstname"];
+//    [person setValue:@"more blah" forKey:@"lastname"];
+//    
+//
+//    NSArray *fetchedObjects = [self fetchAllPeople];
+//    
+//    // ******* start logging
+//    for (NSManagedObject *info in fetchedObjects) {
+//        NSLog(@"FirstName: %@", [info valueForKey:@"firstname"]);
+//        NSLog(@"LastName: %@", [info valueForKey:@"lastname"]);
+//    }
+//    // ******* end logging
+//    
+//    // update table view with data
+//    [peopleArray insertObject:person atIndex:0];
+//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+//    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
+//                          withRowAnimation:UITableViewRowAnimationFade];
+//    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//    
+//    // save data
+//    if (![context save:&error]) {
+//        NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+//    }
+//    NSLog(@"At end of addEvent");
     
 }
 
@@ -222,11 +236,22 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)dealloc 
 {
-//    [managedObjectContext release];
     [peopleArray release];
     [addButton release];
     [fetchRequest release];
     [super dealloc];
 }
+
+#pragma mark - MemberAddViewControllerDelegate
+- (void)addMemberViewController:(MemberAddViewController *)controller didFinish:(NSDictionary *)userInfo
+{
+    //NSString *name = [userInfo objectForKey:@"firstName"];
+    NSLog(@"Result %@" , userInfo);
+    
+    //TODO-RL bind the variables to outlets/vars... then use them
+
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 
 @end
