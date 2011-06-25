@@ -8,10 +8,21 @@
 
 #import <UIKit/UIKit.h>
 #import "MemberViewController.h"
+#import "Role.h"
 
 @interface RoleViewController : UITableViewController {
 
-	NSArray *roles;
+	NSMutableArray *roles;
+	id delegate;
+    NSFetchRequest *fetchRequest;
+    NSError *error;
 }
+
+
+- (NSMutableArray *)fetchAllRoles;
+
+@property (nonatomic, assign) id delegate;
+@property (nonatomic, retain) NSFetchRequest *fetchRequest;
+
 
 @end

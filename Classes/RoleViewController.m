@@ -7,10 +7,12 @@
 //
 
 #import "RoleViewController.h"
-
+#import "TestAppDelegate.h"
 
 @implementation RoleViewController
 
+@synthesize delegate;
+@synthesize fetchRequest;
 
 #pragma mark -
 #pragma mark View lifecycle
@@ -23,8 +25,9 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     //self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	
-	roles = [[NSArray arrayWithObjects:@"Role A" , @"Role B", @"Role C", nil] retain];
+	roles = [self fetchAllRoles];
     //TODO-RL have this load up Roles as main title per cell, but with person for the data as the info if its set
+    //TODO-RL this will have to use a delegate, similar to how the save data screens pass info back
 }
 
 /*
@@ -83,8 +86,10 @@
     }
     
 	// Configure the cell.
-	NSString *name = [roles objectAtIndex:indexPath.row];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ %d",name, indexPath.row];
+	Role *info = [roles objectAtIndex:indexPath.row];
+    cell.textLabel.text = info.rolename;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", 
+                                 info.rolename, info.info];
 	
     return cell;
 }
@@ -139,27 +144,14 @@
 	MemberViewController *detailViewController = [[MemberViewController alloc] initWithNibName:@"MemberViewController" bundle:nil];
 	// ...
 	// Pass the selected object to the new view controller.
-	detailViewController.title = [roles objectAtIndex:indexPath.row];
+
+    //TODO-RL this now breaks.... hmmm figure it out!
+    //	detailViewController.title = [roles objectAtIndex:indexPath.row];
 	detailViewController.delegate = self;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 	[detailViewController release];
 	
-	//display a popup
-	//	NSUInteger row = [indexPath row];
-	//	NSString *rowValue = [roles objectAtIndex:row];
-	//	
-	//	NSString *message = [[NSString alloc] initWithFormat:@"You selected %@", rowValue];
-	//	UIAlertView *alert = [[UIAlertView alloc]
-	//						  initWithTitle:@"Row Selected!" 
-	//						  message:message 
-	//						  delegate:nil
-	//						  cancelButtonTitle:@"Yes I Did"
-	//						  otherButtonTitles:nil];
-	//	[alert show];
-	//	
-	//	[message release];
-	//	[alert release];
-	//	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+
 }
 
 
@@ -185,6 +177,20 @@
 	roles = nil;
 }
 
+- (NSMutableArray *)fetchAllRoles
+{
+    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    
+    fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *roleDesc = [NSEntityDescription 
+                                     entityForName:@"Role" inManagedObjectContext:context];
+    [fetchRequest setEntity:roleDesc];
+    NSMutableArray *fetchedObjects = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
+    
+    return fetchedObjects;
+}
 
 - (void)dealloc {
     [super dealloc];

@@ -7,10 +7,11 @@
 //
 
 #import "MemberViewController.h"
-
+#import "TestAppDelegate.h"
 
 @implementation MemberViewController
 @synthesize delegate;
+@synthesize fetchRequest;
 
 #pragma mark -
 #pragma mark View lifecycle
@@ -21,8 +22,10 @@
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-	members = [[NSArray arrayWithObjects:@"Member 1" , @"Member 2", @"Member 3",
-				@"Member 4", @"Member 5", @"Member 6", nil] retain];
+	//members = [[NSArray arrayWithObjects:@"Member 1" , @"Member 2", @"Member 3",
+	//			@"Member 4", @"Member 5", @"Member 6", nil] retain];
+    
+    members = [self fetchAllPeople];
 }
 
 
@@ -80,10 +83,14 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    // Configure the cell...
-    NSString *name = [members objectAtIndex:indexPath.row];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ %d",name, indexPath.row];
-	
+    // Set up the cell...
+    Person *info = [members objectAtIndex:indexPath.row];
+    cell.textLabel.text = info.firstname;
+    
+    //TODO-RL this is where edits will need to occur, to display any set rolls for the person
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", 
+                                 info.firstname, info.lastname];
+    
     return cell;
 }
 
@@ -139,7 +146,8 @@
 		[self.delegate performSelector:@selector(memberSelected:) withObject:memberName];
 	}
 	
-[self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
+    //TODO-RL make sure this passes the data back via a delegate call, so we can use the selected value to set the Role-person relation
 }
 
 
@@ -159,6 +167,20 @@
 	members = nil;
 }
 
+- (NSMutableArray *)fetchAllPeople
+{
+    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    
+    fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *personDesc = [NSEntityDescription 
+                                       entityForName:@"Person" inManagedObjectContext:context];
+    [fetchRequest setEntity:personDesc];
+    NSMutableArray *fetchedObjects = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
+    
+    return fetchedObjects;
+}
 
 - (void)dealloc {
 	self.delegate = nil;

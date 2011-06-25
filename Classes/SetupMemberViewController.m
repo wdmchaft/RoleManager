@@ -169,7 +169,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [navigationController release];
 }
       
-#pragma mark - Data Access addPerson
+#pragma mark - Data Access
 - (void)addPerson:(NSDictionary *)userInfo
 {
     TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -195,7 +195,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
-#pragma mark - Data Access fetchAllPeople
 - (NSMutableArray *)fetchAllPeople
 {
     TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
