@@ -53,12 +53,28 @@
 #pragma mark IBActions
 -(IBAction)save:(id)sender
 {
-    //TODO-RL implement validation on rolename - not null and unique
+    //TODO-RL implement a unique constraint check on Role name, but not info
     
-    // set results for parent controller to use
-    NSDictionary *results = [NSDictionary dictionaryWithObjectsAndKeys:roleName.text, @"roleName",
-                             info.text, @"info", nil];
-    [self.delegate addRoleViewController:self didFinish:results];
+    // only roleName is required, info optional
+    if ([roleName.text length] == 0) {
+        NSString *message = @"Please enter a Role name";
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle:@"Forget something?" 
+                              message:message 
+                              delegate:nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil];
+        [alert show];
+        [message release];
+        [alert release];
+    }
+    else
+    {
+        // set results for parent controller to use
+        NSDictionary *results = [NSDictionary dictionaryWithObjectsAndKeys:roleName.text, @"roleName",
+                                 info.text, @"info", nil];
+        [self.delegate addRoleViewController:self didFinish:results];
+    }
 }
 
 @end

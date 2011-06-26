@@ -145,13 +145,11 @@
 	// ...
 	// Pass the selected object to the new view controller.
 
-    //TODO-RL this now breaks.... hmmm figure it out!
-    //	detailViewController.title = [roles objectAtIndex:indexPath.row];
+    Role *selectedRole = [roles objectAtIndex:indexPath.row];
+    detailViewController.title = selectedRole.rolename;
 	detailViewController.delegate = self;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 	[detailViewController release];
-	
-
 }
 
 

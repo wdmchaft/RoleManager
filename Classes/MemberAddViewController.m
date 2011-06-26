@@ -53,12 +53,27 @@
 #pragma mark IBActions
 -(IBAction)save:(id)sender
 {
-    //TODO-RL implement validation on firstname/lastname - not null
-    
-    // set results for parent controller to use
-    NSDictionary *results = [NSDictionary dictionaryWithObjectsAndKeys:firstName.text, @"firstName",
-                             lastName.text, @"lastName", nil];
-    [self.delegate addMemberViewController:self didFinish:results];
+    // Require firstname/lastname
+    if ([firstName.text length] == 0 || [lastName.text length] == 0) {
+        NSString *message = @"Please enter first and last names before saving.";
+        UIAlertView *alert = [[UIAlertView alloc]
+                            initWithTitle:@"Forget something?" 
+                            message:message 
+                            delegate:nil
+                            cancelButtonTitle:@"OK"
+                            otherButtonTitles:nil];
+        [alert show];
+        [message release];
+        [alert release];
+    }
+    else
+    {
+        
+        // set results for parent controller to use
+        NSDictionary *results = [NSDictionary dictionaryWithObjectsAndKeys:firstName.text, @"firstName",
+                                 lastName.text, @"lastName", nil];
+        [self.delegate addMemberViewController:self didFinish:results];
+    }
 }
 
 @end
