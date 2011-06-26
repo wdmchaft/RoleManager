@@ -22,6 +22,7 @@
 }
 
 -(IBAction)save:(id)sender;
+-(IBAction)cancel:(id)sender;
 @property (nonatomic, assign) id<MemberAddViewControllerDelegate> delegate;
 
 @end

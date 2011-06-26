@@ -213,8 +213,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - MemberAddViewControllerDelegate
 - (void)addMemberViewController:(MemberAddViewController *)controller didFinish:(NSDictionary *)userInfo
 {
-    [self addPerson:userInfo];
-    [self dismissModalViewControllerAnimated:YES];
+    // if userInfo empty, event was a cancel, not a save.
+    if (userInfo == nil) 
+    {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    else
+    {
+        [self addPerson:userInfo];
+        [self dismissModalViewControllerAnimated:YES];
+    }
 }
 
 @end

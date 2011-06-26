@@ -24,6 +24,7 @@
 }
 
 -(IBAction)save:(id)sender;
+-(IBAction)cancel:(id)sender;
 @property (nonatomic, assign) id<RoleAddViewControllerDelegate> delegate;
 
 @end

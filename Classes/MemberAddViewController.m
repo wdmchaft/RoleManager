@@ -76,4 +76,11 @@
     }
 }
 
+-(IBAction)cancel:(id)sender
+{
+    NSDictionary *results = nil;
+    [self.delegate addMemberViewController:self didFinish:results];
+}
+
+
 @end

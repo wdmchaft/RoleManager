@@ -77,4 +77,10 @@
     }
 }
 
+-(IBAction)cancel:(id)sender
+{
+    NSDictionary *results = nil;
+    [self.delegate addRoleViewController:self didFinish:results];
+}
+
 @end

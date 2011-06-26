@@ -221,8 +221,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - RoleAddViewControllerDelegate
 - (void)addRoleViewController:(RoleAddViewController *)controller didFinish:(NSDictionary *)userInfo
 {
-    [self addRole:userInfo];
-    [self dismissModalViewControllerAnimated:YES];
+    if (userInfo == nil) 
+    {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    else
+    {
+        [self addRole:userInfo];
+        [self dismissModalViewControllerAnimated:YES];
+
+    }
 }
 
 @end
