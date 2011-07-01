@@ -8,11 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "Person.h"
+#import "Role.h"
+
+@protocol MemberViewControllerDelegate;
 
 @interface MemberViewController : UITableViewController 
 {
 	NSMutableArray *members;
-	id delegate;
+    // delegate we're actually using
+	id selectionDelegate;
+    // WORKAROUND - wierd shit happened when id delegate wasn't declared, even though it wasn't used
+    id delegate;
     NSFetchRequest *fetchRequest;
     NSError *error;
 }
@@ -20,6 +26,13 @@
 - (NSMutableArray *)fetchAllPeople;
 
 @property (nonatomic, assign) id delegate;
+@property (nonatomic, assign) id<MemberViewControllerDelegate> selectionDelegate;
 @property (nonatomic, retain) NSFetchRequest *fetchRequest;
 
 @end
+
+@protocol MemberViewControllerDelegate <NSObject>
+@required
+- (void)memberViewController:(MemberViewController *)vc didSelectMember:(Person *)aPerson;
+@end
+

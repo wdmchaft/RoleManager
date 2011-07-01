@@ -10,7 +10,7 @@
 #import "MemberViewController.h"
 #import "Role.h"
 
-@interface RoleViewController : UITableViewController {
+@interface RoleViewController : UITableViewController<MemberViewControllerDelegate> {
 
 	NSMutableArray *roles;
 	id delegate;

@@ -87,10 +87,24 @@
     
 	// Configure the cell.
 	Role *info = [roles objectAtIndex:indexPath.row];
-    cell.textLabel.text = info.rolename;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", 
-                                 info.rolename, info.info];
-	
+    
+    // Get current Assignee's name for cell detail 
+    NSString *currentAssigneeName = nil;
+    NSEnumerator *enumerator = [info.persons objectEnumerator];
+    Person *currentAssignee;
+    while ((currentAssignee = [enumerator nextObject])) {
+        currentAssigneeName = [NSString stringWithFormat:@"%@%@%@", currentAssignee.firstname, @" ", currentAssignee.lastname];
+    }
+    
+    if(currentAssigneeName != nil)
+    {
+        cell.textLabel.text = [NSString stringWithFormat:@"%@%@%@", info.rolename, @" - ", currentAssigneeName];
+        return cell;
+    }
+    
+    //TODO-RL figure out why this isn't acting as expected, but i want it to display role info
+//    cell.detailTextLabel.text = info.info;
+	cell.textLabel.text = info.rolename;
     return cell;
 }
 
@@ -147,17 +161,75 @@
 
     Role *selectedRole = [roles objectAtIndex:indexPath.row];
     detailViewController.title = selectedRole.rolename;
-	detailViewController.delegate = self;
+	detailViewController.selectionDelegate = self;
 	[self.navigationController pushViewController:detailViewController animated:YES];
 	[detailViewController release];
 }
 
 
 #pragma mark -
--(void)memberSelected:(NSString*)memberName
+- (void)memberViewController:(MemberViewController *)vc didSelectMember:(Person *)aPerson
 {
-	NSLog(@"Member selected %@" , memberName);
+    NSIndexPath  *indexPath = [self.tableView indexPathForSelectedRow];
+    
+    if(aPerson != nil) {
+        [self.navigationController popViewControllerAnimated:YES];
+        
+        Role *selectedRole = [roles objectAtIndex:indexPath.row];
+        
+        // clear out the old person relation, and then set the new, as role:person is n:1
+        int arrayCount = [selectedRole.persons count];
+        NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
+        for (int i = 0; i < arrayCount; i++) {
+            [[selectedRole.persons objectAtIndex:i] removeObject:(i)];
+        }
+        [pool release];
+        
+        [selectedRole addPersonsObject:aPerson];
+    }
+    
+    /// debug only
+    NSLog(@"Member selected %@" , aPerson);
+    
+    // set up the get for a managedObject represented by the aPerson object
+    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
+    
+    NSEntityDescription *entity =
+    [NSEntityDescription entityForName:@"Person"
+                inManagedObjectContext:context];
+    [request setEntity:entity];
+    
+    NSPredicate *predicate =
+    [NSPredicate predicateWithFormat:@"self == %@", aPerson];
+    [request setPredicate:predicate];
+    
+    // perform get, and set the 
+    NSArray *array = [context executeFetchRequest:request error:&error];
+    if (array != nil) {
+        NSUInteger count = [array count];
+        if (count == 1) 
+        {
+            //TODO-RL i want to re-save the same object...
+            // save data
+            if (![context save:&error]) {
+                NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+            }
+        }
+        //TODO-RL handle count !=1, or is that not really possible???
+    }
+    else
+    {
+        //handle error
+        NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+    }
+    
+         
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
+
+
 
 #pragma mark -
 #pragma mark Memory management

@@ -28,7 +28,7 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-	self.title =@"<good app name here>";
+	self.title =@"Main Menu";
 }
 
 
@@ -62,27 +62,23 @@
 #pragma mark IBActions
 -(IBAction)loadScreenOne:(id)sender
 {
-    NSLog(@"Config button Pressed - start of event");
 	SetupViewController *setupViewController = [[SetupViewController alloc] initWithNibName:@"SetupViewController" bundle:nil];
 	// Pass the selected object to the new view controller.
 	setupViewController.title = @"Setup";
 	[self.navigationController pushViewController:setupViewController animated:YES];
 	
-	[setupViewController release];
-    NSLog(@"Config button Pressed - end of event");	    
+	[setupViewController release];  
 }
 
 
 -(IBAction)loadScreenTwo:(id)sender
 {
-	NSLog(@"Roles button Pressed - start of event");
 	RoleViewController *roleViewController = [[RoleViewController alloc] initWithNibName:@"RoleViewController" bundle:nil];
 	// Pass the selected object to the new view controller.
 	roleViewController.title = @"Available Roles";
 	[self.navigationController pushViewController:roleViewController animated:YES];
 	
 	[roleViewController release];
-	NSLog(@"Roles button Pressed - end of event");	
 }
 
 

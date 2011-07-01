@@ -11,6 +11,7 @@
 
 @implementation MemberViewController
 @synthesize delegate;
+@synthesize selectionDelegate;
 @synthesize fetchRequest;
 
 #pragma mark -
@@ -140,14 +141,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	NSString *memberName = [members objectAtIndex:indexPath.row];
-
-	if([self.delegate respondsToSelector:@selector(memberSelected:)]) {
-		[self.delegate performSelector:@selector(memberSelected:) withObject:memberName];
-	}
-	
-    [self.navigationController popViewControllerAnimated:YES];
-    //TODO-RL make sure this passes the data back via a delegate call, so we can use the selected value to set the Role-person relation
+	Person *member = [members objectAtIndex:indexPath.row];
+    [self.selectionDelegate memberViewController:self didSelectMember:member];
 }
 
 
@@ -183,7 +178,7 @@
 }
 
 - (void)dealloc {
-	self.delegate = nil;
+	self.selectionDelegate = nil;
     [super dealloc];
 }
 
