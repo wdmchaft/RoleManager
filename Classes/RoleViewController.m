@@ -24,10 +24,7 @@
 	
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     //self.navigationItem.rightBarButtonItem = self.editButtonItem;
-	
 	roles = [self fetchAllRoles];
-    //TODO-RL have this load up Roles as main title per cell, but with person for the data as the info if its set
-    //TODO-RL this will have to use a delegate, similar to how the save data screens pass info back
 }
 
 /*
@@ -177,20 +174,16 @@
         
         Role *selectedRole = [roles objectAtIndex:indexPath.row];
         
-        // clear out the old person relation, and then set the new, as role:person is n:1
-        int arrayCount = [selectedRole.persons count];
+        // clear out the old person relation
+        NSMutableSet *rolePersons = [selectedRole mutableSetValueForKey:@"persons"];
         NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
-        for (int i = 0; i < arrayCount; i++) {
-            [[selectedRole.persons objectAtIndex:i] removeObject:(i)];
-        }
+        [rolePersons removeAllObjects];
         [pool release];
         
+        // and then set the new, as role:person is n:1
         [selectedRole addPersonsObject:aPerson];
     }
-    
-    /// debug only
-    NSLog(@"Member selected %@" , aPerson);
-    
+
     // set up the get for a managedObject represented by the aPerson object
     TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *context = appDelegate.managedObjectContext;
@@ -201,23 +194,27 @@
                 inManagedObjectContext:context];
     [request setEntity:entity];
     
+    // set predicate and refer to aPerson Object to aquire 
     NSPredicate *predicate =
     [NSPredicate predicateWithFormat:@"self == %@", aPerson];
     [request setPredicate:predicate];
     
-    // perform get, and set the 
+    // perform get
     NSArray *array = [context executeFetchRequest:request error:&error];
     if (array != nil) {
         NSUInteger count = [array count];
         if (count == 1) 
         {
-            //TODO-RL i want to re-save the same object...
             // save data
             if (![context save:&error]) {
                 NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
             }
         }
-        //TODO-RL handle count !=1, or is that not really possible???
+        else
+        {
+            //handle error
+            NSLog(@"Whoops, more than one Person Object: %@", [error localizedDescription]);
+        }
     }
     else
     {
@@ -225,11 +222,10 @@
         NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
     }
     
-         
+    // update table view with data   
+    [self.tableView reloadData];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
-
 
 #pragma mark -
 #pragma mark Memory management
@@ -245,12 +241,13 @@
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
 	roles = nil;
+    fetchRequest = nil;
+    error = nil;
 }
 
 - (NSMutableArray *)fetchAllRoles
 {
     TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
     NSManagedObjectContext *context = appDelegate.managedObjectContext;
     
     fetchRequest = [[NSFetchRequest alloc] init];
