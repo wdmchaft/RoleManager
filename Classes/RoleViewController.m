@@ -79,29 +79,27 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
     }
-    
-	// Configure the cell.
+
+    // get Role object
 	Role *info = [roles objectAtIndex:indexPath.row];
     
-    // Get current Assignee's name for cell detail 
+    // get current assignee's name for cell detail 
     NSString *currentAssigneeName = nil;
     NSEnumerator *enumerator = [info.persons objectEnumerator];
     Person *currentAssignee;
-    while ((currentAssignee = [enumerator nextObject])) {
+    while ((currentAssignee = [enumerator nextObject])) 
+    {
         currentAssigneeName = [NSString stringWithFormat:@"%@%@%@", currentAssignee.firstname, @" ", currentAssignee.lastname];
     }
     
+    // set cell label and detail
+	cell.textLabel.text = info.rolename;
     if(currentAssigneeName != nil)
     {
-        cell.textLabel.text = [NSString stringWithFormat:@"%@%@%@", info.rolename, @" - ", currentAssigneeName];
-        return cell;
+        cell.detailTextLabel.text = currentAssigneeName;
     }
-    
-    //TODO-RL figure out why this isn't acting as expected, but i want it to display role info
-//    cell.detailTextLabel.text = info.info;
-	cell.textLabel.text = info.rolename;
     return cell;
 }
 

@@ -81,17 +81,35 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    // Set up the cell...
+    // get cell Person Object, and a formated Person name
     Person *info = [members objectAtIndex:indexPath.row];
-    cell.textLabel.text = info.firstname;
+    NSString *fullName = [NSString stringWithFormat:@"%@%@%@", info.firstname, @" ", info.lastname];
     
-    //TODO-RL this is where edits will need to occur, to display any set rolls for the person
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", 
-                                 info.firstname, info.lastname];
-    
+    // get cell Person's assigned rolls, formating comma delimit
+    NSMutableString *allAssignedRolls = [[NSMutableString alloc] init];
+    NSInteger numRoles = [info.roles count];
+    for ( Role *singleAssignedRoll in info.roles)   
+    {
+        NSMutableString *singleRollName = (NSMutableString *)singleAssignedRoll.rolename;
+        [allAssignedRolls appendString:singleRollName];  
+
+        // don't put comma after last item
+        if(numRoles > 1)
+        {
+            [allAssignedRolls appendString:@", "];
+        }
+        numRoles--;
+    }
+
+    // set cell text and details
+    cell.textLabel.text = fullName;
+    if([allAssignedRolls length] != 0)
+    {
+        cell.detailTextLabel.text = allAssignedRolls;
+    }
     return cell;
 }
 
