@@ -8,7 +8,7 @@
 
 #import "TestAppDelegate.h"
 #import "RoleViewController.h"
-
+#import "FlurryAPI.h"
 
 @implementation TestAppDelegate
 
@@ -24,7 +24,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
     // Override point for customization after application launch.
+    
+    // setup Flurry hook
+    [FlurryAPI startSession:@"3GS6YPLXPHM8BDV2Y7GH"];
 
+    // attempt to respond to shakes
+    application.applicationSupportsShakeToEdit = YES;
+    
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
 

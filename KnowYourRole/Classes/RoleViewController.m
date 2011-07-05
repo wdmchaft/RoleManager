@@ -23,7 +23,11 @@
 	self.title = @"Roles";
 	
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    //self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
+    // use the available "edit" button
+    self.editButtonItem.title = @"Clear Roles";
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
 	roles = [self fetchAllRoles];
 }
 
@@ -56,6 +60,49 @@
  }
  */
 
+- (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    
+    // handle delete event - UNSETS assignments, doesn't delete the Role!!!
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        // Delete the managed object at the given index path.
+        Role *roleEventToUnassign = [roles objectAtIndex:indexPath.row];
+        NSLog(@"roleEventToUnassign B4: %@", roleEventToUnassign);
+        [roleEventToUnassign setPersons:nil];	
+        
+        // Commit the change.
+        if (![context save:&error]) {
+            NSLog(@"Whoops, couldn't delete: %@", [error localizedDescription]);
+        }
+        roles = [self fetchAllRoles];
+        
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView setNeedsDisplay];
+        [self viewDidLoad];
+        NSLog(@"roleEventToUnassign after: %@", roleEventToUnassign);
+    }
+//TODO BUG cell reloadRowsAtIndexPaths 2nd click, cycles the previously deleted name back in, but only for the view (data model is right).
+    // wrapping in begin/endUpdates didn't work either.  
+    
+    // HOW THE FUCK DO I OVERRIDE THE 'DELETE' BUTTON TEXT TO SAY 'UN-ASSIGN'
+}
+
+- (void) setEditing:(BOOL)editing animated:(BOOL)animated {
+    //Do super before, it will change the name of the editing button
+    [super setEditing:editing animated:animated];
+    
+    if (editing) {
+        self.editButtonItem.title = @"Done";
+        self.navigationItem.rightBarButtonItem.style = UIBarButtonItemStyleDone;
+    }
+    else {
+        self.editButtonItem.title = @"Clear Roles";
+    }
+}
 
 #pragma mark -
 #pragma mark Table view data source
@@ -225,6 +272,8 @@
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+
+
 #pragma mark -
 #pragma mark Memory management
 
@@ -258,9 +307,34 @@
 }
 
 - (void)dealloc {
+    NSLog(@"Say bye to %@, kids!", self);
     [super dealloc];
 }
 
+#pragma mark - 
+#pragma mark Shake Event 
+-(BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self becomeFirstResponder];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self resignFirstResponder];
+    [super viewWillDisappear:animated];
+}
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake)
+    {
+        // your code
+        NSLog(@"Shake Win");
+    }
+}
 
 @end
 
