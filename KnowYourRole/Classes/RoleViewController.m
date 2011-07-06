@@ -85,10 +85,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         [self viewDidLoad];
         NSLog(@"roleEventToUnassign after: %@", roleEventToUnassign);
     }
-//TODO BUG cell reloadRowsAtIndexPaths 2nd click, cycles the previously deleted name back in, but only for the view (data model is right).
-    // wrapping in begin/endUpdates didn't work either.  
-    
-    // HOW THE FUCK DO I OVERRIDE THE 'DELETE' BUTTON TEXT TO SAY 'UN-ASSIGN'
 }
 
 - (void) setEditing:(BOOL)editing animated:(BOOL)animated {
@@ -134,20 +130,21 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     
     // get current assignee's name for cell detail 
     NSString *currentAssigneeName = nil;
-    NSEnumerator *enumerator = [info.persons objectEnumerator];
-    Person *currentAssignee;
-    while ((currentAssignee = [enumerator nextObject])) 
-    {
+    Person *currentAssignee = [info.persons anyObject];
+    if(currentAssignee != nil) {
         currentAssigneeName = [NSString stringWithFormat:@"%@%@%@", currentAssignee.firstname, @" ", currentAssignee.lastname];
     }
     
     // set cell label and detail
 	cell.textLabel.text = info.rolename;
-    if(currentAssigneeName != nil)
-    {
-        cell.detailTextLabel.text = currentAssigneeName;
-    }
+    cell.detailTextLabel.text = currentAssigneeName;
+    
     return cell;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return @"Unassign";
 }
 
 
@@ -307,7 +304,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (void)dealloc {
-    NSLog(@"Say bye to %@, kids!", self);
+//    NSLog(@"Say bye to %@, kids!", self);
     [super dealloc];
 }
 
@@ -331,10 +328,42 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (motion == UIEventSubtypeMotionShake)
     {
-        // your code
-        NSLog(@"Shake Win");
+        //for every Role without an Assignee... assign a person. 
+        TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
+        NSManagedObjectContext *context = appDelegate.managedObjectContext;
+        NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
+        
+        NSEntityDescription *entity =
+        [NSEntityDescription entityForName:@"Role"
+                    inManagedObjectContext:context];
+        [request setEntity:entity];
+        
+        // set predicate on roles without assignees 
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"persons.@count == 0"];
+        [request setPredicate:predicate];
+        
+        // perform get
+        NSMutableArray *filteredArray = [[context executeFetchRequest:request error:&error] mutableCopy];
+        if (filteredArray != nil) {
+
+            //TODO- use count of unassigned roles, combined with #people without roles logic in more intellignet routine
+            NSUInteger count = [filteredArray count];
+
+            //TODO- MVP ROUTE - call METHOD-X param=0, set those users.  if unassigned roles still exist, rinse repeat METHOD-X, param=1 etc      
+        }
+        else
+        {
+            //handle error
+            NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+        }
+        
+        // update table view with data   
+        [self.tableView reloadData];
+
     }
 }
+
+//TODO- METHOD-X to return a list of people with 'x' roles.  param = 0,1,>1  METHOD-X
 
 @end
 
