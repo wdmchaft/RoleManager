@@ -297,6 +297,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *roleDesc = [NSEntityDescription 
                                      entityForName:@"Role" inManagedObjectContext:context];
+    
+    //TODO-RL edit to account for no entities existing, or else crash city
+    
     [fetchRequest setEntity:roleDesc];
     NSMutableArray *fetchedObjects = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
     
@@ -304,7 +307,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (void)dealloc {
-//    NSLog(@"Say bye to %@, kids!", self);
     [super dealloc];
 }
 
@@ -343,13 +345,89 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         [request setPredicate:predicate];
         
         // perform get
-        NSMutableArray *filteredArray = [[context executeFetchRequest:request error:&error] mutableCopy];
-        if (filteredArray != nil) {
-
-            //TODO- use count of unassigned roles, combined with #people without roles logic in more intellignet routine
-            NSUInteger count = [filteredArray count];
-
-            //TODO- MVP ROUTE - call METHOD-X param=0, set those users.  if unassigned roles still exist, rinse repeat METHOD-X, param=1 etc      
+        NSMutableArray *unassignedRoles = [[context executeFetchRequest:request error:&error] mutableCopy];
+        if (unassignedRoles != nil) 
+        {
+            //TODO- MVP ROUTE - call METHOD-X param=0, set those users.  if unassigned roles still exist, rinse repeat METHOD-X, param=1 etc  
+            NSMutableArray *peopleWithXRoles = [self fetchPeopleWithXRoles];
+            
+            //and the magic begins here :)
+            
+            int peopleWithXRolesCount = [peopleWithXRoles count];
+            
+            int unassignedRoleCount = [unassignedRoles count];
+            
+            NSMutableIndexSet *randomIndexes = [NSMutableIndexSet indexSet]; //to trace new random indexes
+            
+            for (int i = 0; i < unassignedRoleCount; i++) {
+                int newRandomIndex = arc4random() % unassignedRoleCount;
+                int j = 0; //use j in order to not rich infinite cycle
+                
+                //tracing that all new indeces are unique
+                while ([randomIndexes containsIndex:newRandomIndex] || j >= unassignedRoleCount) 
+                {
+                    newRandomIndex = arc4random() % unassignedRoleCount;
+                    j++;
+                }
+                
+                // handle oopsies
+                if (j >= unassignedRoleCount) 
+                {
+                    break;
+                }
+                if (newRandomIndex > peopleWithXRolesCount -1 ) //-1 because used for index below
+                {
+                    break;
+                }
+                
+                //TODO-RL figure out how to keep calling this method when newRandomIndex is generated as something that already occured
+                
+                //TODO-RL also figure out how to get more people with x roles when i need it
+                
+                //record this random index
+                [randomIndexes addIndex:newRandomIndex];
+                
+                Role *role = [unassignedRoles objectAtIndex:i];
+                Person *person = [peopleWithXRoles objectAtIndex:newRandomIndex];
+                role.persons = [NSSet setWithObject:person];
+                
+                NSEntityDescription *entity =
+                [NSEntityDescription entityForName:@"Role"
+                            inManagedObjectContext:context];
+                [request setEntity:entity];
+                 
+                // set predicate and refer to role Object to aquire 
+                NSPredicate *predicate =
+                [NSPredicate predicateWithFormat:@"self == %@", role];
+                [request setPredicate:predicate];
+                
+                // perform get
+                NSArray *array = [context executeFetchRequest:request error:&error];
+                if (array != nil) {
+                    NSUInteger count = [array count];
+                    if (count == 1) 
+                    {
+                        // save data
+                        if (![context save:&error]) {
+                            NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+                        }
+                    }
+                    else
+                    {
+                        //handle error
+                        NSLog(@"Whoops, more than one Person Object: %@", [error localizedDescription]);
+                    }
+                }
+                else
+                {
+                    //handle error
+                    NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+                }
+            }
+            
+            // update table view with data   
+            [self.tableView reloadData];
+            
         }
         else
         {
@@ -363,7 +441,31 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-//TODO- METHOD-X to return a list of people with 'x' roles.  param = 0,1,>1  METHOD-X
+- (NSMutableArray *)fetchPeopleWithXRoles
+{
+    //for every Role without an Assignee... assign a person. 
+    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = appDelegate.managedObjectContext;
+    NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
+    
+    NSEntityDescription *entity =
+    [NSEntityDescription entityForName:@"Person"
+                inManagedObjectContext:context];
+    [request setEntity:entity];
+    
+    // var arg - TODO-RL change this or make it more flexible for more complex logic.
+    NSNumber *numRoles= [NSNumber numberWithInteger:0];
+    
+    // set predicate on roles without assignees 
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"roles.@count == %@", numRoles];
+    [request setPredicate:predicate];
+    
+    // perform get
+    NSMutableArray *filteredArray = [[context executeFetchRequest:request error:&error] mutableCopy];
+    NSLog(@"HI");
+
+    return filteredArray;
+}
 
 @end
 

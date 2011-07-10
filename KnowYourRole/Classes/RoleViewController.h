@@ -20,6 +20,7 @@
 
 
 - (NSMutableArray *)fetchAllRoles;
+- (NSMutableArray *)fetchPeopleWithXRoles;
 
 @property (nonatomic, assign) id delegate;
 @property (nonatomic, retain) NSFetchRequest *fetchRequest;
