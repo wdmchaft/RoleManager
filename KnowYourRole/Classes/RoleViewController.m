@@ -344,112 +344,161 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         
         // perform get
         NSMutableArray *unassignedRoles = [[context executeFetchRequest:request error:&error] mutableCopy];
-        if (unassignedRoles != nil) 
-        {
-            //TODO-RL pass in a variable here
-            NSMutableArray *peopleWithXRoles = [self fetchPeopleWithXRoles];
-            
-            int peopleWithXRolesCount = [peopleWithXRoles count];
-            int unassignedRoleCount = [unassignedRoles count];
-            
-            // will record previously used random values to avoid duplicates
-            NSMutableIndexSet *randomRoleIndexes = [NSMutableIndexSet indexSet];
-            NSMutableIndexSet *randomPersonIndexes = [NSMutableIndexSet indexSet];
-            
-            NSLog(@"unassignedRoleCount is: %@", [NSNumber numberWithInt:unassignedRoleCount]);
-            NSLog(@"people with 0 roles is: %@", [NSNumber numberWithInt:peopleWithXRolesCount]);
-            
-            // loop on # of people with x roles count, but TODO-RL put this in function, and call with passed in var iterably
-            for (int i = 0; i < peopleWithXRolesCount; i++) {   //unassignedRoleCount
-                
-                NSLog(@"***********LOOP ITERATION %@", [NSNumber numberWithInt:i]);
-                
-                // get random index, from 0 - unassignedRoleCount -1
-                int newRandomRoleIndex = arc4random() % (unassignedRoleCount);
-                int newRandomPersonIndex = arc4random() % (peopleWithXRolesCount);
+        
+        // start recursiveRandomizing logic, passing in all unAssignedRoles filtering against peopleWithXRolesCount (X=0)
+        [self recursiveRandomizer:unassignedRoles count:0];
+    }
+}
 
-                NSLog(@"this randomRoleIndex is: %@", [NSNumber numberWithInt:newRandomRoleIndex]);
-                NSLog(@"this randomPersonIndex is: %@", [NSNumber numberWithInt:newRandomPersonIndex]);
-                // tracing that all new indeces are unique
-                while ([randomRoleIndexes containsIndex:newRandomRoleIndex]) 
+- (void)recursiveRandomizer:(NSMutableArray *)unassignedRoles count:(int)peopleWithXRolesCount
+{
+    if (unassignedRoles != nil) 
+    {
+        // set value that the current recursive loop is using for people with 'x' count
+        int currentCount = peopleWithXRolesCount;
+        
+        // data access hooks
+        TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
+        NSManagedObjectContext *context = appDelegate.managedObjectContext;
+        NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
+        
+        NSMutableArray *peopleWithXRoles = [self fetchPeopleWithXRoles:peopleWithXRolesCount];
+        NSLog(@"people with %@ is %@", [NSNumber numberWithInt:peopleWithXRolesCount], peopleWithXRoles);
+        
+        int newPeopleWithXRolesCount = [peopleWithXRoles count];
+        int unassignedRoleCount = [unassignedRoles count];
+        
+        // will record previously used random values to avoid duplicates
+        NSMutableIndexSet *randomRoleIndexes = [NSMutableIndexSet indexSet];
+        NSMutableIndexSet *randomPersonIndexes = [NSMutableIndexSet indexSet];
+        
+        NSLog(@"unassignedRoleCount is: %@", [NSNumber numberWithInt:unassignedRoleCount]);
+        NSLog(@"people with %@ roles is: %@",[NSNumber numberWithInt:currentCount], [NSNumber numberWithInt:newPeopleWithXRolesCount]);
+        
+        // loop on # of people with x roles count, but TODO-RL put this in function, and call with passed in var iterably
+        int loopCounter = newPeopleWithXRolesCount;
+        if(newPeopleWithXRolesCount > unassignedRoleCount)
+        {
+            loopCounter = newPeopleWithXRolesCount - unassignedRoleCount;
+            NSLog(@"MORE people than roles, use newPeopleWithXRolesCount-unassignedRoleCountas loop");
+        }
+        for (int i = 0; i < loopCounter; i++) {   //unassignedRoleCount
+            
+            NSLog(@"***********LOOP ITERATION %@", [NSNumber numberWithInt:i]);
+            
+            // get random index, from 0 - unassignedRoleCount -1
+            int newRandomRoleIndex = arc4random() % (unassignedRoleCount);
+            int newRandomPersonIndex = arc4random() % (newPeopleWithXRolesCount);
+            
+            NSLog(@"this randomRoleIndex is: %@", [NSNumber numberWithInt:newRandomRoleIndex]);
+            NSLog(@"this randomPersonIndex is: %@", [NSNumber numberWithInt:newRandomPersonIndex]);
+            
+            // tracing that all new indeces are unique
+            while ([randomRoleIndexes containsIndex:newRandomRoleIndex]) 
+            {
+                if(unassignedRoleCount == 1)
+                {
+                    newRandomRoleIndex = 0;
+                    break;
+                }
+                else
                 {
                     newRandomRoleIndex = arc4random() % (unassignedRoleCount);
-                    NSLog(@"*looping* this randomRoleIndex is: %@", [NSNumber numberWithInt:newRandomRoleIndex]);
                 }
                 
-                while ([randomPersonIndexes containsIndex:newRandomPersonIndex]) 
+                NSLog(@"*looping* this randomRoleIndex is: %@", [NSNumber numberWithInt:newRandomRoleIndex]);
+            }
+            
+            while ([randomPersonIndexes containsIndex:newRandomPersonIndex]) 
+            {
+                newRandomPersonIndex = arc4random() % (newPeopleWithXRolesCount);
+                NSLog(@"*looping* this randomPersonIndex is: %@", [NSNumber numberWithInt:newRandomPersonIndex]);
+            }
+            
+            // record this random indexes
+            [randomRoleIndexes addIndex:newRandomRoleIndex];
+            [randomPersonIndexes addIndex:newRandomPersonIndex];
+            
+            // get role and person objects using these random indexes
+            Role *role = [unassignedRoles objectAtIndex:newRandomRoleIndex];
+            Person *person = [peopleWithXRoles objectAtIndex:newRandomPersonIndex];
+            role.persons = [NSSet setWithObject:person];
+            
+            NSEntityDescription *entity =
+            [NSEntityDescription entityForName:@"Role"
+                        inManagedObjectContext:context];
+            [request setEntity:entity];
+            
+            // set predicate and refer to role Object to aquire 
+            NSPredicate *predicate =
+            [NSPredicate predicateWithFormat:@"self == %@", role];
+            [request setPredicate:predicate];
+        
+            
+            // perform get
+            NSArray *array = [context executeFetchRequest:request error:&error];
+            if (array != nil) {
+                NSUInteger count = [array count];
+                if (count == 1) 
                 {
-                    newRandomPersonIndex = arc4random() % (peopleWithXRolesCount);
-                    NSLog(@"*looping* this randomPersonIndex is: %@", [NSNumber numberWithInt:newRandomPersonIndex]);
-                }
-
-                // record this random indexes
-                [randomRoleIndexes addIndex:newRandomRoleIndex];
-                [randomPersonIndexes addIndex:newRandomPersonIndex];
-                
-                // get role and person objects using these random indexes
-                Role *role = [unassignedRoles objectAtIndex:newRandomRoleIndex];
-                Person *person = [peopleWithXRoles objectAtIndex:newRandomPersonIndex];
-                role.persons = [NSSet setWithObject:person];
-                
-                NSEntityDescription *entity =
-                [NSEntityDescription entityForName:@"Role"
-                            inManagedObjectContext:context];
-                [request setEntity:entity];
-                 
-                // set predicate and refer to role Object to aquire 
-                NSPredicate *predicate =
-                [NSPredicate predicateWithFormat:@"self == %@", role];
-                [request setPredicate:predicate];
-                
-                //TODO-RL ask B if you can save stuff as a batch?
-                
-                // perform get
-                NSArray *array = [context executeFetchRequest:request error:&error];
-                if (array != nil) {
-                    NSUInteger count = [array count];
-                    if (count == 1) 
-                    {
-                        // save data
-                        if (![context save:&error]) {
-                            NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
-                        }
-                    }
-                    else
-                    {
-                        // handle error
-                        NSLog(@"Whoops, more than one Person Object: %@", [error localizedDescription]);
+                    // save data
+                    if (![context save:&error]) {
+                        NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
                     }
                 }
                 else
                 {
                     // handle error
-                    NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+                    NSLog(@"Whoops, more than one Person Object: %@", [error localizedDescription]);
                 }
             }
-
-            //TODO-RL call logic again when unassignedRoles exist, and peopleWithXRolesCount is > 0.  Do this until ready to be done.
-            // double check everything
-            [request setEntity:roleEntity];
-            [request setPredicate:unassignedRolePredicate];
-            unassignedRoles = [[context executeFetchRequest:request error:&error] mutableCopy];
-            if (unassignedRoles != nil) 
+            else
             {
-                NSLog(@"more to do!");
-            }      
-        }
-        else
-        {
-            // handle error
-            NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+                // handle error
+                NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+            }
         }
         
-        // update table view with data   
-        [self.tableView reloadData];
+        //TODO-RL call logic again when unassignedRoles exist, and peopleWithXRolesCount is > 0.  Do this until ready to be done.
+        // double check everything
+        NSEntityDescription *roleEntity =
+        [NSEntityDescription entityForName:@"Role"
+                    inManagedObjectContext:context];
+        // set predicate on roles without assignees 
+        NSLog(@"attempting to find people for %@ more roles", [NSNumber numberWithInt:newPeopleWithXRolesCount]);
+        NSPredicate *unassignedRolePredicate = [NSPredicate predicateWithFormat:@"persons.@count == 0"];
+        [request setEntity:roleEntity];
+        [request setPredicate:unassignedRolePredicate];
+        
+        
+        error = nil;
+        
+        NSMutableArray *remainingUnassignedRoles = [[context executeFetchRequest:request error:&error] mutableCopy];
+        if(error)
+            NSLog(@"Error %@", [error localizedDescription]);
+        
+        NSLog(@"number of unassigned roles is %d", [unassignedRoles count]);
+        if (remainingUnassignedRoles != nil && ([remainingUnassignedRoles count] != 0)) 
+        {
+            NSLog(@"more to do!");
+            currentCount = currentCount+1;
+            [self recursiveRandomizer:remainingUnassignedRoles count:currentCount];
+            
+        } 
     }
+    else
+    {
+        // handle error
+        NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+    }
+    NSLog(@"*** ALL DONE *** ");
+    
+    // update table view with data   
+    [self.tableView reloadData];
+//}
 }
 
-- (NSMutableArray *)fetchPeopleWithXRoles
+- (NSMutableArray *)fetchPeopleWithXRoles:(NSUInteger *)numUnassignedRoles
 {
     //for every Role without an Assignee... assign a person. 
     TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -462,7 +511,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [request setEntity:entity];
     
     // var arg - TODO-RL change this or make it more flexible for more complex logic.
-    NSNumber *numRoles= [NSNumber numberWithInteger:0];
+    NSNumber *numRoles= [NSNumber numberWithInteger:numUnassignedRoles];
     
     // set predicate on roles without assignees 
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"roles.@count == %@", numRoles];

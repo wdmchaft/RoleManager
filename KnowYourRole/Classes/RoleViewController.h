@@ -20,7 +20,8 @@
 
 
 - (NSMutableArray *)fetchAllRoles;
-- (NSMutableArray *)fetchPeopleWithXRoles;
+- (NSMutableArray *)fetchPeopleWithXRoles:(int)numUnassignedRoles;
+- (void) recursiveRandomizer:(NSMutableArray *)integers count:(int)peopleWithXRolesCount;
 
 @property (nonatomic, assign) id delegate;
 @property (nonatomic, retain) NSFetchRequest *fetchRequest;
