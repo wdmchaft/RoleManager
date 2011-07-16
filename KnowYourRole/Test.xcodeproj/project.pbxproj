@@ -23,6 +23,7 @@
 		6F90B9DE13B67E6E00231DE6 /* RoleAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F90B9DC13B67E6E00231DE6 /* RoleAddViewController.m */; };
 		6F90B9DF13B67E6E00231DE6 /* RoleAddViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F90B9DD13B67E6E00231DE6 /* RoleAddViewController.xib */; };
 		6F90B9E113B687AF00231DE6 /* SetupRoleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F90B9E013B687AF00231DE6 /* SetupRoleViewController.xib */; };
+		6FACB98413C2DA4A006183CF /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FACB98313C2DA4A006183CF /* libFlurry.a */; };
 		6FE9A22C13A70D9A00B60A33 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE9A22B13A70D9A00B60A33 /* CoreData.framework */; };
 		6FE9A23013A8472900B60A33 /* SetupMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE9A22E13A8472900B60A33 /* SetupMemberViewController.m */; };
 		6FE9A23113A8472900B60A33 /* SetupMemberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FE9A22F13A8472900B60A33 /* SetupMemberViewController.xib */; };
@@ -60,6 +61,11 @@
 		6F90B9DC13B67E6E00231DE6 /* RoleAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoleAddViewController.m; sourceTree = "<group>"; };
 		6F90B9DD13B67E6E00231DE6 /* RoleAddViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RoleAddViewController.xib; sourceTree = "<group>"; };
 		6F90B9E013B687AF00231DE6 /* SetupRoleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SetupRoleViewController.xib; sourceTree = "<group>"; };
+		6FACB97F13C2DA4A006183CF /* FlurryAdDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAdDelegate.h; sourceTree = "<group>"; };
+		6FACB98013C2DA4A006183CF /* FlurryAPI+AppCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FlurryAPI+AppCircle.h"; sourceTree = "<group>"; };
+		6FACB98113C2DA4A006183CF /* FlurryOffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryOffer.h; sourceTree = "<group>"; };
+		6FACB98213C2DA4A006183CF /* FlurryAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAPI.h; sourceTree = "<group>"; };
+		6FACB98313C2DA4A006183CF /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
 		6FE9A22B13A70D9A00B60A33 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		6FE9A22D13A8472900B60A33 /* SetupMemberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupMemberViewController.h; sourceTree = "<group>"; };
 		6FE9A22E13A8472900B60A33 /* SetupMemberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupMemberViewController.m; sourceTree = "<group>"; };
@@ -87,6 +93,7 @@
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */,
 				6FE9A22C13A70D9A00B60A33 /* CoreData.framework in Frameworks */,
+				6FACB98413C2DA4A006183CF /* libFlurry.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,6 +129,7 @@
 				6F90B9DB13B67E6E00231DE6 /* RoleAddViewController.h */,
 				6F90B9DC13B67E6E00231DE6 /* RoleAddViewController.m */,
 				6F90B9DD13B67E6E00231DE6 /* RoleAddViewController.xib */,
+				6FACB97D13C2DA4A006183CF /* FlurryLib */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -178,6 +186,26 @@
 				2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6FACB97D13C2DA4A006183CF /* FlurryLib */ = {
+			isa = PBXGroup;
+			children = (
+				6FACB97E13C2DA4A006183CF /* AppCircle */,
+				6FACB98213C2DA4A006183CF /* FlurryAPI.h */,
+				6FACB98313C2DA4A006183CF /* libFlurry.a */,
+			);
+			path = FlurryLib;
+			sourceTree = "<group>";
+		};
+		6FACB97E13C2DA4A006183CF /* AppCircle */ = {
+			isa = PBXGroup;
+			children = (
+				6FACB97F13C2DA4A006183CF /* FlurryAdDelegate.h */,
+				6FACB98013C2DA4A006183CF /* FlurryAPI+AppCircle.h */,
+				6FACB98113C2DA4A006183CF /* FlurryOffer.h */,
+			);
+			path = AppCircle;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -281,7 +309,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Test_Prefix.pch;
 				INFOPLIST_FILE = "Test-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Classes/FlurryLib\"",
+				);
 				PRODUCT_NAME = KnowYourRole;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -293,7 +327,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Test_Prefix.pch;
 				INFOPLIST_FILE = "Test-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Classes/FlurryLib\"",
+				);
 				PRODUCT_NAME = KnowYourRole;
+				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
