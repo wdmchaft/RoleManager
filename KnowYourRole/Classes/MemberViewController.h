@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Person.h"
 #import "Role.h"
+#import "TestAppDelegate.h"
 
 @protocol MemberViewControllerDelegate;
 
@@ -21,6 +22,8 @@
     id delegate;
     NSFetchRequest *fetchRequest;
     NSError *error;
+    TestAppDelegate *appDelegate;
+    NSManagedObjectContext *context;
 }
 
 - (NSMutableArray *)fetchAllPeople;

@@ -21,8 +21,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	self.title = @"Roles";
-	
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+    
+    // set up single delegate and context for core data access
+    appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
+    context = appDelegate.managedObjectContext;
 
     // use the available "edit" button
     self.editButtonItem.title = @"Clear Roles";
@@ -62,16 +64,12 @@
 
 - (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    
+{ 
     // handle delete event - UNSETS assignments, doesn't delete the Role!!!
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         // Delete the managed object at the given index path.
         Role *roleEventToUnassign = [roles objectAtIndex:indexPath.row];
-        NSLog(@"roleEventToUnassign B4: %@", roleEventToUnassign);
         [roleEventToUnassign setPersons:nil];	
         
         // Commit the change.
@@ -83,11 +81,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView setNeedsDisplay];
         [self viewDidLoad];
-        NSLog(@"roleEventToUnassign after: %@", roleEventToUnassign);
+        [roleEventToUnassign release];
     }
 }
 
-- (void) setEditing:(BOOL)editing animated:(BOOL)animated {
+- (void) setEditing:(BOOL)editing animated:(BOOL)animated 
+{
     //Do super before, it will change the name of the editing button
     [super setEditing:editing animated:animated];
     
@@ -104,20 +103,22 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark Table view data source
 
 // Customize the number of sections in the table view.
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
+{
     return 1;
 }
 
 
 // Customize the number of rows in the table view.
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
+{
     return roles.count;
 }
 
 
 // Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
+{    
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -140,6 +141,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     cell.detailTextLabel.text = currentAssigneeName;
     
     return cell;
+    [currentAssigneeName release];
+    [info release];
+    [cell release];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -191,9 +195,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark -
 #pragma mark Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-	
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
+{
 	MemberViewController *detailViewController = [[MemberViewController alloc] initWithNibName:@"MemberViewController" bundle:nil];
 	// ...
 	// Pass the selected object to the new view controller.
@@ -218,17 +221,13 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         
         // clear out the old person relation
         NSMutableSet *rolePersons = [selectedRole mutableSetValueForKey:@"persons"];
-        NSAutoreleasePool *pool =  [[NSAutoreleasePool alloc] init];
         [rolePersons removeAllObjects];
-        [pool release];
         
         // and then set the new, as role:person is n:1
         [selectedRole addPersonsObject:aPerson];
     }
 
     // set up the get for a managedObject represented by the aPerson object
-    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
     NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
     
     NSEntityDescription *entity =
@@ -285,15 +284,15 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
 	roles = nil;
-    fetchRequest = nil;
+    self.fetchRequest = nil;
+    self.delegate = nil;
     error = nil;
+    [appDelegate release];
+    [context release];
 }
 
 - (NSMutableArray *)fetchAllRoles
 {
-    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    
     fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *roleDesc = [NSEntityDescription 
                                      entityForName:@"Role" inManagedObjectContext:context];
@@ -302,24 +301,30 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     NSMutableArray *fetchedObjects = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
     
     return fetchedObjects;
+    [fetchRequest release];
+    [fetchedObjects release];
 }
 
-- (void)dealloc {
+- (void)dealloc 
+{
     [super dealloc];
 }
 
 #pragma mark - 
 #pragma mark Shake Event 
--(BOOL)canBecomeFirstResponder {
+-(BOOL)canBecomeFirstResponder 
+{
     return YES;
 }
 
--(void)viewDidAppear:(BOOL)animated {
+-(void)viewDidAppear:(BOOL)animated 
+{
     [super viewDidAppear:animated];
     [self becomeFirstResponder];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated 
+{
     [self resignFirstResponder];
     [super viewWillDisappear:animated];
 }
@@ -329,8 +334,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     if (motion == UIEventSubtypeMotionShake)
     {
         // for every Role without an Assignee... assign a person. 
-        TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *context = appDelegate.managedObjectContext;
         NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
         
         NSEntityDescription *roleEntity =
@@ -347,6 +350,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         
         // start recursiveRandomizing logic, passing in all unAssignedRoles filtering against peopleWithXRolesCount (X=0)
         [self recursiveRandomizer:unassignedRoles count:0];
+        [unassignedRoles release];
     }
 }
 
@@ -358,8 +362,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         int currentCount = peopleWithXRolesCount;
         
         // data access hooks
-        TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *context = appDelegate.managedObjectContext;
         NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
         
         NSMutableArray *peopleWithXRoles = [self fetchPeopleWithXRoles:peopleWithXRolesCount];
@@ -375,18 +377,17 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         NSLog(@"unassignedRoleCount is: %@", [NSNumber numberWithInt:unassignedRoleCount]);
         NSLog(@"people with %@ roles is: %@",[NSNumber numberWithInt:currentCount], [NSNumber numberWithInt:newPeopleWithXRolesCount]);
         
-        // loop on # of people with x roles count, but TODO-RL put this in function, and call with passed in var iterably
+        // loop on # of people with x roles count, or if we have less roles to asign then people, loop on unassigned role #
         int loopCounter = newPeopleWithXRolesCount;
         if(newPeopleWithXRolesCount > unassignedRoleCount)
-        {
-            loopCounter = newPeopleWithXRolesCount - unassignedRoleCount;
-            NSLog(@"MORE people than roles, use newPeopleWithXRolesCount-unassignedRoleCountas loop");
+        {  
+            loopCounter = unassignedRoleCount;
         }
-        for (int i = 0; i < loopCounter; i++) {   //unassignedRoleCount
+        for (int i = 0; i < loopCounter; i++) {
             
             NSLog(@"***********LOOP ITERATION %@", [NSNumber numberWithInt:i]);
             
-            // get random index, from 0 - unassignedRoleCount -1
+            // get random index, from 0 - val [non inclusive]
             int newRandomRoleIndex = arc4random() % (unassignedRoleCount);
             int newRandomPersonIndex = arc4random() % (newPeopleWithXRolesCount);
             
@@ -409,6 +410,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                 NSLog(@"*looping* this randomRoleIndex is: %@", [NSNumber numberWithInt:newRandomRoleIndex]);
             }
             
+            // tracing that all new indeces are unique
             while ([randomPersonIndexes containsIndex:newRandomPersonIndex]) 
             {
                 newRandomPersonIndex = arc4random() % (newPeopleWithXRolesCount);
@@ -434,7 +436,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
             [NSPredicate predicateWithFormat:@"self == %@", role];
             [request setPredicate:predicate];
         
-            
             // perform get
             NSArray *array = [context executeFetchRequest:request error:&error];
             if (array != nil) {
@@ -459,32 +460,28 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
             }
         }
         
-        //TODO-RL call logic again when unassignedRoles exist, and peopleWithXRolesCount is > 0.  Do this until ready to be done.
-        // double check everything
         NSEntityDescription *roleEntity =
         [NSEntityDescription entityForName:@"Role"
                     inManagedObjectContext:context];
+        
         // set predicate on roles without assignees 
         NSLog(@"attempting to find people for %@ more roles", [NSNumber numberWithInt:newPeopleWithXRolesCount]);
         NSPredicate *unassignedRolePredicate = [NSPredicate predicateWithFormat:@"persons.@count == 0"];
         [request setEntity:roleEntity];
         [request setPredicate:unassignedRolePredicate];
-        
-        
-        error = nil;
-        
+       
         NSMutableArray *remainingUnassignedRoles = [[context executeFetchRequest:request error:&error] mutableCopy];
-        if(error)
-            NSLog(@"Error %@", [error localizedDescription]);
-        
+
         NSLog(@"number of unassigned roles is %d", [unassignedRoles count]);
         if (remainingUnassignedRoles != nil && ([remainingUnassignedRoles count] != 0)) 
         {
             NSLog(@"more to do!");
             currentCount = currentCount+1;
             [self recursiveRandomizer:remainingUnassignedRoles count:currentCount];
-            
-        } 
+        }
+        
+        [remainingUnassignedRoles release];
+        [peopleWithXRoles release];
     }
     else
     {
@@ -495,14 +492,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     
     // update table view with data   
     [self.tableView reloadData];
-//}
 }
 
 - (NSMutableArray *)fetchPeopleWithXRoles:(NSUInteger *)numUnassignedRoles
 {
     //for every Role without an Assignee... assign a person. 
-    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
     NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
     
     NSEntityDescription *entity =
@@ -518,8 +512,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [request setPredicate:predicate];
     
     // perform get
-    NSMutableArray *filteredArray = [[context executeFetchRequest:request error:&error] mutableCopy];
-    return filteredArray;
+    return [[context executeFetchRequest:request error:&error] mutableCopy];
+    [numRoles release];
 }
 
 @end

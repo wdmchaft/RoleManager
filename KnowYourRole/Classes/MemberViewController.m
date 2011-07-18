@@ -18,13 +18,16 @@
 #pragma mark View lifecycle
 
 
-- (void)viewDidLoad {
+- (void)viewDidLoad 
+{
     [super viewDidLoad];
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-	//members = [[NSArray arrayWithObjects:@"Member 1" , @"Member 2", @"Member 3",
-	//			@"Member 4", @"Member 5", @"Member 6", nil] retain];
+    
+    // set up single delegate and context for core data access
+    appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
+    context = appDelegate.managedObjectContext;
     
     members = [self fetchAllPeople];
 }
@@ -58,25 +61,24 @@
 }
 */
 
-
 #pragma mark -
 #pragma mark Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
+{
     // Return the number of sections.
     return 1;
 }
 
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
+{
     // Return the number of rows in the section.
     return members.count;
 }
 
-
 // Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
+{
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -90,10 +92,11 @@
     
     // get cell Person's assigned rolls, formating comma delimit
     NSMutableString *allAssignedRolls = [[NSMutableString alloc] init];
+    NSMutableString *singleRollName = [[NSMutableString alloc] init];
     NSInteger numRoles = [info.roles count];
     for ( Role *singleAssignedRoll in info.roles)   
     {
-        NSMutableString *singleRollName = (NSMutableString *)singleAssignedRoll.rolename;
+        singleRollName = (NSMutableString *)singleAssignedRoll.rolename;
         [allAssignedRolls appendString:singleRollName];  
 
         // don't put comma after last item
@@ -111,6 +114,12 @@
         cell.detailTextLabel.text = allAssignedRolls;
     }
     return cell;
+    
+    [fullName release];
+    [allAssignedRolls release];
+    [singleRollName release];
+    [info release];
+    [cell release];
 }
 
 
@@ -157,35 +166,38 @@
 #pragma mark -
 #pragma mark Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
+{
 	Person *member = [members objectAtIndex:indexPath.row];
     [self.selectionDelegate memberViewController:self didSelectMember:member];
+    [member release];
 }
-
 
 #pragma mark -
 #pragma mark Memory management
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning 
+{
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
     // Relinquish ownership any cached data, images, etc. that aren't in use.
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload 
+{
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
-    // For example: self.myOutlet = nil;
+
 	members = nil;
+    self.delegate = nil;
+    self.selectionDelegate = nil;
+    self.fetchRequest = nil;
+    [appDelegate release];
+    [context release];
 }
 
 - (NSMutableArray *)fetchAllPeople
-{
-    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    
+{   
     fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *personDesc = [NSEntityDescription 
                                        entityForName:@"Person" inManagedObjectContext:context];
@@ -193,13 +205,17 @@
     NSMutableArray *fetchedObjects = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
     
     return fetchedObjects;
+    
+    [fetchRequest release];
+    [personDesc release];
+    [fetchedObjects release];
 }
 
-- (void)dealloc {
+- (void)dealloc 
+{
 	self.selectionDelegate = nil;
     [super dealloc];
 }
-
 
 @end
 

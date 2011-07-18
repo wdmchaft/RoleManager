@@ -16,6 +16,7 @@
 @synthesize button;
 @synthesize roleArray;
 @synthesize fetchRequest;
+@synthesize date;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,9 +39,6 @@
 - (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    
     // handle delete event
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
@@ -65,6 +63,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [super viewDidLoad];
     self.title = @"Role Setup";
+    
+    // set up single delegate and context for core data access
+    appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
+    context = appDelegate.managedObjectContext;
     
     // Set up the buttons.
     // create a toolbar to have two buttons in the right
@@ -125,6 +127,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     self.button = nil;
     self.roleArray = nil;
     self.fetchRequest = nil;
+    [appDelegate release];
+    [context release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -161,6 +165,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [button release];
     [fetchRequest release];
     [super dealloc];
+    [date release];
 }
 
 - (void)addEvent 
@@ -177,9 +182,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - Data Access
 - (void)addRole:(NSDictionary *)userInfo
 {
-    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
     NSManagedObject *role = (Role *)[NSEntityDescription
                                          insertNewObjectForEntityForName:@"Role" 
                                          inManagedObjectContext:context];
@@ -187,7 +189,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [role setValue:[userInfo valueForKey:@"roleName"] forKey:@"rolename"];
     [role setValue:[userInfo valueForKey:@"info"] forKey:@"info"];
     
-    NSDate* date = [NSDate date];
     [role setValue:date forKey:@"date"];
     
     // save data
@@ -205,10 +206,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (NSMutableArray *)fetchAllRoles
 {
-    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    
     fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *roleDesc = [NSEntityDescription 
                                        entityForName:@"Role" inManagedObjectContext:context];

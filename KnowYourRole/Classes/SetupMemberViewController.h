@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Person.h"
 #import "MemberAddViewController.h"
+#import "TestAppDelegate.h"
 
 @interface SetupMemberViewController : UITableViewController<MemberAddViewControllerDelegate>{
     
@@ -16,6 +17,8 @@
     UIBarButtonItem *button;
     NSFetchRequest *fetchRequest;
     NSError *error;
+    TestAppDelegate *appDelegate;
+    NSManagedObjectContext *context;
 }
 
 - (void)addEvent;

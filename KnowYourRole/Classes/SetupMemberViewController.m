@@ -37,9 +37,6 @@
 - (void)tableView:(UITableView *)aTableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    
     // handle delete event
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
@@ -63,6 +60,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [super viewDidLoad];
     self.title = @"Member Setup";
+    
+    // set up single delegate and context for core data access
+    appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
+    context = appDelegate.managedObjectContext;
     
     // Set up the buttons.
     // create a toolbar to have two buttons in the right
@@ -121,6 +122,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     self.button = nil;
     self.peopleArray = nil;
     self.fetchRequest = nil;
+    [appDelegate release];
+    [context release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -172,9 +175,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - Data Access
 - (void)addPerson:(NSDictionary *)userInfo
 {
-    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
     NSManagedObject *person = (Person *)[NSEntityDescription
                                          insertNewObjectForEntityForName:@"Person" 
                                          inManagedObjectContext:context];
@@ -197,10 +197,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (NSMutableArray *)fetchAllPeople
 {
-    TestAppDelegate *appDelegate = (TestAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    
     fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *personDesc = [NSEntityDescription 
                                        entityForName:@"Person" inManagedObjectContext:context];

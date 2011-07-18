@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Role.h"
 #import "RoleAddViewController.h"
+#import "TestAppDelegate.h"
 
 @interface SetupRoleViewController : UITableViewController<RoleAddViewControllerDelegate>
 {
@@ -17,6 +18,9 @@
     UIBarButtonItem *button;
     NSFetchRequest *fetchRequest;
     NSError *error;
+    NSDate* date; 
+    TestAppDelegate *appDelegate;
+    NSManagedObjectContext *context;
     
 }
 
@@ -29,5 +33,7 @@
 @property (nonatomic, retain) UIBarButtonItem *button;
 @property (nonatomic, retain) NSMutableArray *roleArray;
 @property (nonatomic, retain) NSFetchRequest *fetchRequest;
+@property (nonatomic, retain) NSDate *date;
+
 
 @end

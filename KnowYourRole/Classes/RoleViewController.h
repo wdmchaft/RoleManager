@@ -16,6 +16,8 @@
 	id delegate;
     NSFetchRequest *fetchRequest;
     NSError *error;
+    TestAppDelegate *appDelegate;
+    NSManagedObjectContext *context;
 }
 
 
