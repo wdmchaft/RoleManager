@@ -16,6 +16,19 @@
 		6F03D08113A6FC2500ED4EC8 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6F03D07F13A6FC2500ED4EC8 /* DataModel.xcdatamodeld */; };
 		6F03D09313A7077400ED4EC8 /* SetupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F03D09113A7077400ED4EC8 /* SetupViewController.m */; };
 		6F03D09413A7077400ED4EC8 /* SetupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F03D09213A7077400ED4EC8 /* SetupViewController.xib */; };
+		6F0D0F6613D50AB200FC1D00 /* knowYourRole_Application.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F6413D5086700FC1D00 /* knowYourRole_Application.png */; };
+		6F0D0F6713D50AD600FC1D00 /* knowYourRole_Application Hi-Res.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F6213D5083C00FC1D00 /* knowYourRole_Application Hi-Res.png */; };
+		6F0D0F6E13D50BB100FC1D00 /* knowYourRole_Spotlight Hi-Res.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F6C13D50BB100FC1D00 /* knowYourRole_Spotlight Hi-Res.png */; };
+		6F0D0F6F13D50BB100FC1D00 /* knowYourRole_spotlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F6D13D50BB100FC1D00 /* knowYourRole_spotlight.png */; };
+		6F0D0F7113D50C3000FC1D00 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F7013D50C3000FC1D00 /* Default.png */; };
+		6F0D0F7313D50C3600FC1D00 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F7213D50C3600FC1D00 /* Default@2x.png */; };
+		6F0D0F7613D50C9B00FC1D00 /* knowYourRole_WebClip Hi-Res.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F7413D50C9B00FC1D00 /* knowYourRole_WebClip Hi-Res.png */; };
+		6F0D0F7713D50C9B00FC1D00 /* knowYourRole_WebClip.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F7513D50C9B00FC1D00 /* knowYourRole_WebClip.png */; };
+		6F0D0F7A13D50CDC00FC1D00 /* knowYourRole_Toolbar Hi-Res.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F7813D50CDC00FC1D00 /* knowYourRole_Toolbar Hi-Res.png */; };
+		6F0D0F7B13D50CDC00FC1D00 /* knowYourRole_ToolBar.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F7913D50CDC00FC1D00 /* knowYourRole_ToolBar.png */; };
+		6F0D0F7E13D50D0F00FC1D00 /* knowYourRole_TabBar Hi-Res.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F7C13D50D0F00FC1D00 /* knowYourRole_TabBar Hi-Res.png */; };
+		6F0D0F7F13D50D0F00FC1D00 /* knowYourRole_TabBar.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F7D13D50D0F00FC1D00 /* knowYourRole_TabBar.png */; };
+		6F0D0F8113D50D5700FC1D00 /* knowYourRole_App Store.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F8013D50D5700FC1D00 /* knowYourRole_App Store.png */; };
 		6F1ED78B13BC0B1E00AEEADC /* Role.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1ED78A13BC0B1E00AEEADC /* Role.m */; };
 		6F1ED78E13BC0B1E00AEEADC /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1ED78D13BC0B1E00AEEADC /* Person.m */; };
 		6F73B7AC13B03FDA00ECEB27 /* MemberAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F73B7AA13B03FDA00ECEB27 /* MemberAddViewController.m */; };
@@ -50,6 +63,19 @@
 		6F03D09013A7077400ED4EC8 /* SetupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetupViewController.h; path = ../Test.xcodeproj/SetupViewController.h; sourceTree = "<group>"; };
 		6F03D09113A7077400ED4EC8 /* SetupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetupViewController.m; path = ../Test.xcodeproj/SetupViewController.m; sourceTree = "<group>"; };
 		6F03D09213A7077400ED4EC8 /* SetupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SetupViewController.xib; path = ../Test.xcodeproj/SetupViewController.xib; sourceTree = "<group>"; };
+		6F0D0F6213D5083C00FC1D00 /* knowYourRole_Application Hi-Res.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "knowYourRole_Application Hi-Res.png"; sourceTree = "<group>"; };
+		6F0D0F6413D5086700FC1D00 /* knowYourRole_Application.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = knowYourRole_Application.png; sourceTree = "<group>"; };
+		6F0D0F6C13D50BB100FC1D00 /* knowYourRole_Spotlight Hi-Res.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "knowYourRole_Spotlight Hi-Res.png"; sourceTree = "<group>"; };
+		6F0D0F6D13D50BB100FC1D00 /* knowYourRole_spotlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = knowYourRole_spotlight.png; sourceTree = "<group>"; };
+		6F0D0F7013D50C3000FC1D00 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		6F0D0F7213D50C3600FC1D00 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		6F0D0F7413D50C9B00FC1D00 /* knowYourRole_WebClip Hi-Res.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "knowYourRole_WebClip Hi-Res.png"; sourceTree = "<group>"; };
+		6F0D0F7513D50C9B00FC1D00 /* knowYourRole_WebClip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = knowYourRole_WebClip.png; sourceTree = "<group>"; };
+		6F0D0F7813D50CDC00FC1D00 /* knowYourRole_Toolbar Hi-Res.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "knowYourRole_Toolbar Hi-Res.png"; sourceTree = "<group>"; };
+		6F0D0F7913D50CDC00FC1D00 /* knowYourRole_ToolBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = knowYourRole_ToolBar.png; sourceTree = "<group>"; };
+		6F0D0F7C13D50D0F00FC1D00 /* knowYourRole_TabBar Hi-Res.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "knowYourRole_TabBar Hi-Res.png"; sourceTree = "<group>"; };
+		6F0D0F7D13D50D0F00FC1D00 /* knowYourRole_TabBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = knowYourRole_TabBar.png; sourceTree = "<group>"; };
+		6F0D0F8013D50D5700FC1D00 /* knowYourRole_App Store.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "knowYourRole_App Store.png"; sourceTree = "<group>"; };
 		6F1ED78913BC0B1E00AEEADC /* Role.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Role.h; sourceTree = "<group>"; };
 		6F1ED78A13BC0B1E00AEEADC /* Role.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Role.m; sourceTree = "<group>"; };
 		6F1ED78C13BC0B1E00AEEADC /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
@@ -145,6 +171,19 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				6F0D0F8013D50D5700FC1D00 /* knowYourRole_App Store.png */,
+				6F0D0F7C13D50D0F00FC1D00 /* knowYourRole_TabBar Hi-Res.png */,
+				6F0D0F7D13D50D0F00FC1D00 /* knowYourRole_TabBar.png */,
+				6F0D0F7413D50C9B00FC1D00 /* knowYourRole_WebClip Hi-Res.png */,
+				6F0D0F7513D50C9B00FC1D00 /* knowYourRole_WebClip.png */,
+				6F0D0F7813D50CDC00FC1D00 /* knowYourRole_Toolbar Hi-Res.png */,
+				6F0D0F7913D50CDC00FC1D00 /* knowYourRole_ToolBar.png */,
+				6F0D0F7213D50C3600FC1D00 /* Default@2x.png */,
+				6F0D0F7013D50C3000FC1D00 /* Default.png */,
+				6F0D0F6C13D50BB100FC1D00 /* knowYourRole_Spotlight Hi-Res.png */,
+				6F0D0F6D13D50BB100FC1D00 /* knowYourRole_spotlight.png */,
+				6F0D0F6413D5086700FC1D00 /* knowYourRole_Application.png */,
+				6F0D0F6213D5083C00FC1D00 /* knowYourRole_Application Hi-Res.png */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -270,6 +309,19 @@
 				6F73B7AD13B03FDA00ECEB27 /* MemberAddViewController.xib in Resources */,
 				6F90B9DF13B67E6E00231DE6 /* RoleAddViewController.xib in Resources */,
 				6F90B9E113B687AF00231DE6 /* SetupRoleViewController.xib in Resources */,
+				6F0D0F6613D50AB200FC1D00 /* knowYourRole_Application.png in Resources */,
+				6F0D0F6713D50AD600FC1D00 /* knowYourRole_Application Hi-Res.png in Resources */,
+				6F0D0F6E13D50BB100FC1D00 /* knowYourRole_Spotlight Hi-Res.png in Resources */,
+				6F0D0F6F13D50BB100FC1D00 /* knowYourRole_spotlight.png in Resources */,
+				6F0D0F7113D50C3000FC1D00 /* Default.png in Resources */,
+				6F0D0F7313D50C3600FC1D00 /* Default@2x.png in Resources */,
+				6F0D0F7613D50C9B00FC1D00 /* knowYourRole_WebClip Hi-Res.png in Resources */,
+				6F0D0F7713D50C9B00FC1D00 /* knowYourRole_WebClip.png in Resources */,
+				6F0D0F7A13D50CDC00FC1D00 /* knowYourRole_Toolbar Hi-Res.png in Resources */,
+				6F0D0F7B13D50CDC00FC1D00 /* knowYourRole_ToolBar.png in Resources */,
+				6F0D0F7E13D50D0F00FC1D00 /* knowYourRole_TabBar Hi-Res.png in Resources */,
+				6F0D0F7F13D50D0F00FC1D00 /* knowYourRole_TabBar.png in Resources */,
+				6F0D0F8113D50D5700FC1D00 /* knowYourRole_App Store.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,6 +12,20 @@
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
 	<string></string>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>knowYourRole_App Store</string>
+		<string>knowYourRole_TabBar Hi-Res</string>
+		<string>knowYourRole_TabBar</string>
+		<string>knowYourRole_ToolBar Hi-Res</string>
+		<string>knowYourRole_ToolBar</string>
+		<string>knowYourRole_spotlight</string>
+		<string>knowYourRole_Spotlight Hi-Res</string>
+		<string>knowYourRole_WebClip</string>
+		<string>knowYourRole_WebClip Hi-Res</string>
+		<string>knowYourRole_Application.png</string>
+		<string>knowYourRole_Application Hi-Res.png</string>
+	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.roblittledotca.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -32,6 +46,10 @@
 	<true/>
 	<key>NSMainNibFile</key>
 	<string>MainWindow</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
 	<key>UTExportedTypeDeclarations</key>
 	<array/>
 	<key>UTImportedTypeDeclarations</key>
