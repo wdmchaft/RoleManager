@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 45;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -31,6 +31,7 @@
 		6F0D0F8113D50D5700FC1D00 /* knowYourRole_App Store.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F0D0F8013D50D5700FC1D00 /* knowYourRole_App Store.png */; };
 		6F1ED78B13BC0B1E00AEEADC /* Role.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1ED78A13BC0B1E00AEEADC /* Role.m */; };
 		6F1ED78E13BC0B1E00AEEADC /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F1ED78D13BC0B1E00AEEADC /* Person.m */; };
+		6F32A2B01415D2A8005D4394 /* Know_Your_Role.mobileprovision in Resources */ = {isa = PBXBuildFile; fileRef = 6F32A2AF1415D2A8005D4394 /* Know_Your_Role.mobileprovision */; };
 		6F73B7AC13B03FDA00ECEB27 /* MemberAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F73B7AA13B03FDA00ECEB27 /* MemberAddViewController.m */; };
 		6F73B7AD13B03FDA00ECEB27 /* MemberAddViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F73B7AB13B03FDA00ECEB27 /* MemberAddViewController.xib */; };
 		6F90B9DE13B67E6E00231DE6 /* RoleAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F90B9DC13B67E6E00231DE6 /* RoleAddViewController.m */; };
@@ -80,6 +81,7 @@
 		6F1ED78A13BC0B1E00AEEADC /* Role.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Role.m; sourceTree = "<group>"; };
 		6F1ED78C13BC0B1E00AEEADC /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		6F1ED78D13BC0B1E00AEEADC /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		6F32A2AF1415D2A8005D4394 /* Know_Your_Role.mobileprovision */ = {isa = PBXFileReference; lastKnownFileType = file; path = Know_Your_Role.mobileprovision; sourceTree = "<group>"; };
 		6F73B7A913B03FDA00ECEB27 /* MemberAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemberAddViewController.h; sourceTree = "<group>"; };
 		6F73B7AA13B03FDA00ECEB27 /* MemberAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MemberAddViewController.m; sourceTree = "<group>"; };
 		6F73B7AB13B03FDA00ECEB27 /* MemberAddViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MemberAddViewController.xib; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				6F32A2AF1415D2A8005D4394 /* Know_Your_Role.mobileprovision */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -276,7 +279,7 @@
 				LastUpgradeCheck = 0420;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Test" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -322,6 +325,7 @@
 				6F0D0F7E13D50D0F00FC1D00 /* knowYourRole_TabBar Hi-Res.png in Resources */,
 				6F0D0F7F13D50D0F00FC1D00 /* knowYourRole_TabBar.png in Resources */,
 				6F0D0F8113D50D5700FC1D00 /* knowYourRole_App Store.png in Resources */,
+				6F32A2B01415D2A8005D4394 /* Know_Your_Role.mobileprovision in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,18 +359,28 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
+				BUILD_VARIANTS = armv6;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Test_Prefix.pch;
 				INFOPLIST_FILE = "Test-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Classes/FlurryLib\"",
 				);
 				PRODUCT_NAME = KnowYourRole;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -375,16 +389,26 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
+				BUILD_VARIANTS = armv6;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Test_Prefix.pch;
 				INFOPLIST_FILE = "Test-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Classes/FlurryLib\"",
 				);
 				PRODUCT_NAME = KnowYourRole;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -393,13 +417,17 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ARCHS = (
+					armv6,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Robert E B Little";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				PROVISIONING_PROFILE = "C2EE1C72-C817-4E15-AC14-7ACDA55FD900";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -407,14 +435,20 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ARCHS = (
+					armv6,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Robert E B Little";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "C2EE1C72-C817-4E15-AC14-7ACDA55FD900";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
