@@ -494,7 +494,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [self.tableView reloadData];
 }
 
-- (NSMutableArray *)fetchPeopleWithXRoles:(NSUInteger *)numUnassignedRoles
+- (NSMutableArray *)fetchPeopleWithXRoles:(int)numUnassignedRoles
 {
     //for every Role without an Assignee... assign a person. 
     NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
