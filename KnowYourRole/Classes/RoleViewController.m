@@ -365,7 +365,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         NSFetchRequest *request = [[[NSFetchRequest alloc] init] autorelease];
         
         NSMutableArray *peopleWithXRoles = [self fetchPeopleWithXRoles:peopleWithXRolesCount];
-        NSLog(@"people with %@ is %@", [NSNumber numberWithInt:peopleWithXRolesCount], peopleWithXRoles);
         
         int newPeopleWithXRolesCount = [peopleWithXRoles count];
         int unassignedRoleCount = [unassignedRoles count];
@@ -373,9 +372,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         // will record previously used random values to avoid duplicates
         NSMutableIndexSet *randomRoleIndexes = [NSMutableIndexSet indexSet];
         NSMutableIndexSet *randomPersonIndexes = [NSMutableIndexSet indexSet];
-        
-        NSLog(@"unassignedRoleCount is: %@", [NSNumber numberWithInt:unassignedRoleCount]);
-        NSLog(@"people with %@ roles is: %@",[NSNumber numberWithInt:currentCount], [NSNumber numberWithInt:newPeopleWithXRolesCount]);
         
         // loop on # of people with x roles count, or if we have less roles to asign then people, loop on unassigned role #
         int loopCounter = newPeopleWithXRolesCount;
@@ -385,14 +381,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         }
         for (int i = 0; i < loopCounter; i++) {
             
-            NSLog(@"***********LOOP ITERATION %@", [NSNumber numberWithInt:i]);
-            
             // get random index, from 0 - val [non inclusive]
             int newRandomRoleIndex = arc4random() % (unassignedRoleCount);
             int newRandomPersonIndex = arc4random() % (newPeopleWithXRolesCount);
-            
-            NSLog(@"this randomRoleIndex is: %@", [NSNumber numberWithInt:newRandomRoleIndex]);
-            NSLog(@"this randomPersonIndex is: %@", [NSNumber numberWithInt:newRandomPersonIndex]);
             
             // tracing that all new indeces are unique
             while ([randomRoleIndexes containsIndex:newRandomRoleIndex]) 
@@ -406,15 +397,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                 {
                     newRandomRoleIndex = arc4random() % (unassignedRoleCount);
                 }
-                
-                NSLog(@"*looping* this randomRoleIndex is: %@", [NSNumber numberWithInt:newRandomRoleIndex]);
             }
             
             // tracing that all new indeces are unique
             while ([randomPersonIndexes containsIndex:newRandomPersonIndex]) 
             {
                 newRandomPersonIndex = arc4random() % (newPeopleWithXRolesCount);
-                NSLog(@"*looping* this randomPersonIndex is: %@", [NSNumber numberWithInt:newRandomPersonIndex]);
             }
             
             // record this random indexes
@@ -465,17 +453,14 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                     inManagedObjectContext:context];
         
         // set predicate on roles without assignees 
-        NSLog(@"attempting to find people for %@ more roles", [NSNumber numberWithInt:newPeopleWithXRolesCount]);
         NSPredicate *unassignedRolePredicate = [NSPredicate predicateWithFormat:@"persons.@count == 0"];
         [request setEntity:roleEntity];
         [request setPredicate:unassignedRolePredicate];
        
         NSMutableArray *remainingUnassignedRoles = [[context executeFetchRequest:request error:&error] mutableCopy];
 
-        NSLog(@"number of unassigned roles is %d", [unassignedRoles count]);
         if (remainingUnassignedRoles != nil && ([remainingUnassignedRoles count] != 0)) 
         {
-            NSLog(@"more to do!");
             currentCount = currentCount+1;
             [self recursiveRandomizer:remainingUnassignedRoles count:currentCount];
         }
@@ -488,7 +473,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         // handle error
         NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
     }
-    NSLog(@"*** ALL DONE *** ");
     
     // update table view with data   
     [self.tableView reloadData];

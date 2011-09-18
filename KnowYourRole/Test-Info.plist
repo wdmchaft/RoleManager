@@ -7,22 +7,13 @@
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string></string>
+	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>knowYourRole_App Store</string>
-		<string>knowYourRole_TabBar Hi-Res</string>
-		<string>knowYourRole_TabBar</string>
-		<string>knowYourRole_ToolBar Hi-Res</string>
-		<string>knowYourRole_ToolBar</string>
-		<string>knowYourRole_spotlight</string>
-		<string>knowYourRole_Spotlight Hi-Res</string>
-		<string>knowYourRole_WebClip</string>
-		<string>knowYourRole_WebClip Hi-Res</string>
-		<string>knowYourRole_Application.png</string>
-		<string>knowYourRole_Application Hi-Res.png</string>
+		<string>Icon.png</string>
+		<string>Icon@2x.png</string>
+		<string>Icon-Small.png</string>
+		<string>Icon-Small@2x.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.littlelogic.knowyourrole</string>
