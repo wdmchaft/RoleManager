@@ -1,9 +1,8 @@
 //
 //  RoleViewController.m
-//  Test
 //
 //  Created by Rob Little on 11-05-14.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Copyright 2011 littlelogic.ca All rights reserved.
 //
 
 #import "RoleViewController.h"
@@ -79,6 +78,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         roles = [self fetchAllRoles];
         
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        //[self titleForDeleteConfirmationButtonForRowAtIndexPath];
         [self.tableView setNeedsDisplay];
         [self viewDidLoad];
         [roleEventToUnassign release];
@@ -122,7 +122,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
+    if (cell == nil) 
+    {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
     }
 
@@ -214,7 +215,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSIndexPath  *indexPath = [self.tableView indexPathForSelectedRow];
     
-    if(aPerson != nil) {
+    if(aPerson != nil) 
+    {
         [self.navigationController popViewControllerAnimated:YES];
         
         Role *selectedRole = [roles objectAtIndex:indexPath.row];
@@ -242,12 +244,14 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     
     // perform get
     NSArray *array = [context executeFetchRequest:request error:&error];
-    if (array != nil) {
+    if (array != nil) 
+    {
         NSUInteger count = [array count];
         if (count == 1) 
         {
             // save data
-            if (![context save:&error]) {
+            if (![context save:&error]) 
+            {
                 NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
             }
         }
@@ -273,14 +277,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark -
 #pragma mark Memory management
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning 
+{
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
     // Relinquish ownership any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload 
+{
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
 	roles = nil;
@@ -379,7 +385,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         {  
             loopCounter = unassignedRoleCount;
         }
-        for (int i = 0; i < loopCounter; i++) {
+        for (int i = 0; i < loopCounter; i++) 
+        {
             
             // get random index, from 0 - val [non inclusive]
             int newRandomRoleIndex = arc4random() % (unassignedRoleCount);
@@ -426,12 +433,14 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         
             // perform get
             NSArray *array = [context executeFetchRequest:request error:&error];
-            if (array != nil) {
+            if (array != nil) 
+            {
                 NSUInteger count = [array count];
                 if (count == 1) 
                 {
                     // save data
-                    if (![context save:&error]) {
+                    if (![context save:&error]) 
+                    {
                         NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
                     }
                 }

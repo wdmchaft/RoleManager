@@ -1,14 +1,13 @@
 //
 //  TestAppDelegate.m
-//  Test
 //
 //  Created by Rob Little on 11-05-14.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Copyright 2011 littlelogic.ca All rights reserved.
 //
 
 #import "TestAppDelegate.h"
 #import "RoleViewController.h"
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 
 @implementation TestAppDelegate
 
@@ -25,8 +24,8 @@
     
     // Override point for customization after application launch.
     
-    // setup Flurry hook
-    [FlurryAPI startSession:@"3GS6YPLXPHM8BDV2Y7GH"];
+    // setup Flurry 3.0 hook
+    [FlurryAnalytics startSession:@"3GS6YPLXPHM8BDV2Y7GH"];
 
     // attempt to respond to shakes
     application.applicationSupportsShakeToEdit = YES;
