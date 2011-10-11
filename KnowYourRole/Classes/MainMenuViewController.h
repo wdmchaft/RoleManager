@@ -6,13 +6,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreData/CoreData.h>
+#import "TestAppDelegate.h"
 
-
-@interface MainMenuViewController : UIViewController {
-
+@interface MainMenuViewController : UIViewController 
+{
+    NSManagedObjectContext *context;
+    NSFetchRequest *fetchRequest;
+    NSError *error;
+    TestAppDelegate *appDelegate;
 }
 
 -(IBAction)loadScreenOne:(id)sender;
 -(IBAction)loadScreenTwo:(id)sender;
+-(BOOL)isSetupComplete;
+@property(retain) IBOutlet UIButton *assignRolesButton;
+@property (nonatomic, retain) NSFetchRequest *fetchRequest;
 
 @end
